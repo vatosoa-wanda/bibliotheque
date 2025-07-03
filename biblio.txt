@@ -1,0 +1,80 @@
+
+user
+    id_user cle primaire (auto_increment)
+    nom_user Varchar
+    mdp Varchar
+
+Livre
+    id_livre cle primaire (auto_increment)
+    NomLivre Varchar
+    Auteur 
+    restreint boolean
+
+Exemplaire 
+    id_exemplaire cle primaire (auto_increment)
+    id_livre (foreign key id_livre table Livre)
+
+Profil
+    id_profil cle primaire (auto_increment)
+    Profil Varchar
+    quota int 
+    nbrJour_Pret_penatile int 
+
+Adherent 
+    id_adherent
+    Nom
+    Prénom
+    Email
+    Téléphone
+    Date de naissance
+    Adresse
+    id_profil (foreign key id_profil table Profil)
+    actif boolean DEFAULT false
+
+Penalisation
+    id_penalisation cle primaire (auto_increment)
+    id_adherent (foreign key id_adherent table Adherent)
+    date_debut 
+    date_fin
+    etat (en cours, termine)
+
+Abonnement
+    id_abonnement cle primaire (auto_increment)
+    id_adherent (foreign key id_adherent table Adherent)
+    date_debut 
+    date_fin
+
+Reservation
+    id_reservation cle primaire (auto_increment)
+    date
+    id_adherent (foreign key id_adherent table Adherent)
+    id_exemplaire (foreign key id_exemplaire table Exemplaire)
+    etat (en_cours, valide, annule)
+
+Pret
+    id_pret cle primaire (auto_increment)
+    id_adherent (foreign key id_adherent table Adherent)
+    id_exemplaire (foreign key id_exemplaire table Exemplaire)
+    date_debut
+    date_retour_prevue
+    date_retour_effective
+    type_pret (sur place, emporte)
+    statut_pret (en demande, en cours, retourne, retard) DEFAULT "en demande"
+    etat_traitement ('en_attente', 'valide', 'rejete', 'annule') DEFAULT 'en_attente'
+
+Prolongement
+    id_prolong cle primaire (auto_increment)
+    id_pret (foreign key id_pret table Pret)
+    date_debut
+    date_retour_prevue
+    date_retour_effective 
+    etat_traitement ('en_attente', 'valide', 'rejete', 'annule') DEFAULT 'en_attente'
+
+JourFerie 
+    id_ferie cle primaire (auto_increment)
+    date 
+    description (samedi,dimanche,fete_de_l_independance,...)
+
+
+
+

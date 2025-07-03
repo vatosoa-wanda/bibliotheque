@@ -1,0 +1,31 @@
+mvn archetype:generate -DgroupId=com.example -DartifactId=biblioMVC -DarchetypeArtifactId=maven-archetype-webapp
+java -jar target/biblio-0.0.1-SNAPSHOT.jar
+
+
+
+BIBLIOTHECAIRE :
+
+- se connecter en tant que BIBLIOTHECAIRE
+- CRUD adherent 
+- Valider un emprunt
+- Valider un prolongement
+- Valider une reservation
+- Check si un livre est dispo
+- emprunt en cours
+- 
+
+PLUS:
+- livre plus emprumte
+- membre plus actif
+- liste membre actif en cours
+
+ADHERENT
+-	Se connecter en tant qu'adherent
+-	Demander un emprunt livre (exemplaire)
+-   Faire une reservation livre (exemplaire)
+-	Demander un prolongement 
+-	Retourner un livre (exemplaire)
+-	Consulter ses emprunts en cours
+
+PUBLIC
+-	Rechercher un livre

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenue <span th:text="${#authentication.name}">Utilisateur</span>!</h1>
+        
+        <p>Vous êtes connecté avec succès.</p>
+        
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Se déconnecter</button>
+        </form>
+    </div>
+</body>
+</html>
