@@ -2,7 +2,9 @@ package com.example.biblio.service;
 
 import com.example.biblio.model.Livre;
 import com.example.biblio.repository.LivreRepository;
+import com.example.biblio.repository.ExemplaireRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,12 +13,8 @@ public class LivreService {
     private final LivreRepository livreRepository;
     private final ExemplaireRepository exemplaireRepository;
 
-    public LivreService(LivreRepository livreRepository) {
+    public LivreService(LivreRepository livreRepository, ExemplaireRepository exemplaireRepository) {
         this.livreRepository = livreRepository;
-    }
-
-    // Injection du repository via constructeur
-    public LivreService(ExemplaireRepository exemplaireRepository) {
         this.exemplaireRepository = exemplaireRepository;
     }
 
@@ -42,6 +40,6 @@ public class LivreService {
             throw new IllegalArgumentException("L'ID du livre ne peut pas être null");
         }
         
-        return exemplaireRepository.countDisponiblesByLivreId(livreId) > 0;
+        return exemplaireRepository.countByLivreIdAndDisponibleTrue(livreId) > 0;
     }
 }

@@ -11,6 +11,11 @@
     <p>Email : <span th:text="${sessionAdherent.email}"></span></p>
 
     <p>Page réservée aux adhérents</p>
+    <form th:action="@{/pret}" method="get">
+        <button type="submit">Prêter un livre</button>
+    </form>    
+
+
     <!-- <a href="/logout">Se déconnecter</a> -->
     <form th:action="@{/logout}" method="post">
         <button type="submit">Se déconnecter</button>

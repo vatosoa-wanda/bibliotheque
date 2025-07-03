@@ -21,8 +21,12 @@ public class Abonnement {
     @Column(name = "date_fin", nullable = false)
     private LocalDate dateFin;
 
-    @Column(nullable = false)
-    private boolean actif = true;
+    // @Column(nullable = false)
+    // private boolean actif = true;
+
+    @Column(name = "actif", nullable = false)
+    private boolean actif = true; // Valeur par défaut
+
 
     // Constructeurs
     public Abonnement() {}
@@ -31,7 +35,10 @@ public class Abonnement {
         this.adherent = adherent;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.actif = !LocalDate.now().isAfter(dateFin); // Définit automatiquement l'état actif
+        // this.actif = !LocalDate.now().isAfter(dateFin); // Définit automatiquement l'état actif
+        // Dans le constructeur
+        this.actif = this.dateFin.isAfter(LocalDate.now()) || this.dateFin.isEqual(LocalDate.now());
+
     }
 
     // Getters & Setters

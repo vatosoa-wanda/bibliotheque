@@ -35,4 +35,6 @@ public interface PretRepository extends JpaRepository<Pret, Long> {
     // Compter les prêts en cours d'un adhérent
     @Query("SELECT COUNT(p) FROM Pret p WHERE p.adherent.id = ?1 AND p.statutPret = 'EN_COURS'")
     int countPretsEnCoursByAdherent(Long adherentId);
+
+    long countByAdherentIdAndStatutPret(Long adherentId, Pret.StatutPret statut);
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Prêter un Livre</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <h1>Prêt de Livre</h1>
+
+    <form th:action="@{/pret}" method="post">
+        <div>
+            <label for="titre">Titre du livre :</label>
+            <input type="text" id="titre" name="titre" placeholder="Ex: Le Petit Prince">
+        </div>
+        <div>
+            <label for="auteur">Auteur :</label>
+            <input type="text" id="auteur" name="auteur" placeholder="Ex: Antoine de Saint-Exupéry">
+        </div>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <a th:href="@{/home-adherent}">Retour à l’accueil</a>
+    <!-- Résultats ici (si tu les ajoutes plus tard) -->
+    <!-- Ajouter ceci après le formulaire pour afficher les messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+</body>
+</html>

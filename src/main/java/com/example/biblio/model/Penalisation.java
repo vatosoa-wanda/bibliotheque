@@ -25,6 +25,10 @@ public class Penalisation {
     @Column(nullable = false, length = 20)
     private String etat = "en_cours"; // valeurs possibles : en_cours, termine
 
+    public enum Etat {
+        EN_COURS, TERMINE
+    }
+
     // Constructeurs
     public Penalisation() {}
 

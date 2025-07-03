@@ -36,7 +36,7 @@ public class ExemplaireService {
     // Trouver un exemplaire disponible pour un livre
     @Transactional(readOnly = true)
     public Exemplaire trouverExemplaireDisponible(Long livreId) {
-        return exemplaireRepository.findDisponiblesByLivreId(livreId)
+        return exemplaireRepository.findByLivreIdAndDisponibleTrue(livreId)
                 .stream()
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Aucun exemplaire disponible"));
@@ -53,5 +53,9 @@ public class ExemplaireService {
     @Transactional(readOnly = true)
     public List<Exemplaire> getExemplairesByLivre(Long livreId) {
         return exemplaireRepository.findByLivreId(livreId);
+    }
+
+    public List<Exemplaire> findDisponiblesByLivreId(Long livreId) {
+        return exemplaireRepository.findByLivreIdAndDisponibleTrue(livreId);
     }
 }

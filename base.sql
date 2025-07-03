@@ -31,19 +31,6 @@ CREATE TABLE Profil (
     nbr_jour_pret_penalite INTEGER NOT NULL
 );
 
--- Table Adherent
--- CREATE TABLE Adherent (
---     id_adherent SERIAL PRIMARY KEY,
---     nom VARCHAR(50) NOT NULL,
---     prenom VARCHAR(50) NOT NULL,
---     email VARCHAR(100) UNIQUE NOT NULL,
---     telephone VARCHAR(20),
---     date_naissance DATE NOT NULL,
---     adresse TEXT,
---     id_profil INTEGER NOT NULL REFERENCES Profil(id_profil),
---     actif BOOLEAN DEFAULT FALSE,
---     date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
 
 CREATE TABLE Adherent (
     id_adherent SERIAL PRIMARY KEY,
@@ -76,6 +63,7 @@ CREATE TABLE Abonnement (
     date_debut DATE NOT NULL,
     date_fin DATE NOT NULL
 );
+ALTER TABLE abonnement ADD COLUMN actif BOOLEAN;
 
 -- Table Reservation
 CREATE TABLE Reservation (
@@ -123,3 +111,10 @@ CREATE INDEX idx_pret_adherent ON Pret(id_adherent);
 CREATE INDEX idx_pret_exemplaire ON Pret(id_exemplaire);
 CREATE INDEX idx_reservation_adherent ON Reservation(id_adherent);
 CREATE INDEX idx_reservation_exemplaire ON Reservation(id_exemplaire);
+
+
+ALTER TABLE abonnement DROP COLUMN IF EXISTS actif;
+
+ALTER TABLE abonnement ADD COLUMN actif BOOLEAN NOT NULL DEFAULT true;
+
+UPDATE abonnement SET actif = (date_fin >= CURRENT_DATE);
