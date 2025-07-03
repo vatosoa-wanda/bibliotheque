@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <h1>Bienvenue Administrateur <span th:text="${#authentication.name}">Admin</span></h1>
+    <p>Page réservée aux utilisateurs avec rôle USER (bibliothécaires)</p>
+    <!-- <a href="/logout">Se déconnecter</a> -->
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Se déconnecter</button>
+    </form>
+</body>
+</html>
