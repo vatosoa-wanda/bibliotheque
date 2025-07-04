@@ -27,4 +27,6 @@ public interface AbonnementRepository extends JpaRepository<Abonnement, Long> {
            "FROM Abonnement a WHERE a.adherent.id = :adherentId " +
            "AND a.dateDebut <= CURRENT_DATE AND a.dateFin >= CURRENT_DATE")
     boolean hasAbonnementActif(Long adherentId);
+
+    boolean existsByAdherentIdAndDateFinAfter(Long adherentId, LocalDate date);
 }

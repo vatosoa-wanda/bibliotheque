@@ -34,6 +34,12 @@ public class Exemplaire {
         this.disponible = disponible;
     }
 
+    public Exemplaire(Livre livre) {
+        this.livre = livre;
+        this.disponible = true; // ou false par défaut
+    }
+
+
     // Getters & Setters
     public Long getId() {
         return id;

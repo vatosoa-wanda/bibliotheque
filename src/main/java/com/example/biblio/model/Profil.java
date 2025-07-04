@@ -62,6 +62,10 @@ public class Profil {
         return nbrJourPenalite;
     }
 
+    public Integer getNbrJourPretPenalite() {
+        return nbrJourPenalite;
+    }
+
     public void setNbrJourPenalite(Integer nbrJourPenalite) {
         this.nbrJourPenalite = nbrJourPenalite;
     }

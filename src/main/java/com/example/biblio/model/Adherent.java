@@ -3,7 +3,7 @@ package com.example.biblio.model;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import java.time.Period;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -130,6 +130,10 @@ public class Adherent implements UserDetails {
 
     public void setDateNaissance(LocalDate dateNaissance) {
         this.dateNaissance = dateNaissance;
+    }
+
+    public int getAge() {
+        return Period.between(dateNaissance, LocalDate.now()).getYears();
     }
 
     public String getAdresse() {

@@ -14,4 +14,6 @@ public interface PenalisationRepository extends JpaRepository<Penalisation, Long
 
     // Optionnel : trouver celles en cours
     List<Penalisation> findByEtat(String etat);
+
+    boolean existsByAdherentIdAndEtat(Long adherentId, Penalisation.Etat etat);
 }
