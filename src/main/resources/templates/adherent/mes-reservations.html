@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mes Réservations</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Mes Réservations</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Titre du livre</th>
+                <th>Auteur</th>
+                <th>Date de réservation</th>
+                <th>Date à réserver</th>
+                <th>État</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reservation : ${reservations}">
+                <td th:text="${reservation.exemplaire.livre.titre}">Titre</td>
+                <td th:text="${reservation.exemplaire.livre.auteur}">Auteur</td>
+                <td th:text="${#dates.format(reservation.dateReservation, 'dd/MM/yyyy HH:mm')}">Date Réservation</td>
+                <td th:text="${#dates.format(reservation.dateAReserver, 'dd/MM/yyyy')}">Date à Réserver</td>
+                <td th:text="${reservation.etat}">État</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><a th:href="@{/adherent/dashboard}">Retour à l'accueil</a></p>
+</body>
+</html>

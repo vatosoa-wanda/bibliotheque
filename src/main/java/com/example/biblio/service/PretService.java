@@ -126,55 +126,67 @@ public class PretService {
         );
     }
 
+@Transactional
+public Pret demanderPret(String titre, String auteur, Adherent adherent) {
+    // 1. Vérifier que le livre existe (recherche flexible)
+    Livre livre;
 
-    @Transactional
-    public Pret demanderPret(String titre, String auteur, Adherent adherent) {
-        // 1. Vérifier que le livre existe
-        Livre livre = livreRepository.findByTitreAndAuteur(titre, auteur)
-                .orElseThrow(() -> new RuntimeException("Livre non trouvé"));
+    boolean hasTitre = titre != null && !titre.isBlank();
+    boolean hasAuteur = auteur != null && !auteur.isBlank();
 
-        // 2. Vérifier qu'il y a un exemplaire disponible
-        Exemplaire exemplaire = exemplaireRepository.findFirstByLivreIdAndDisponibleTrue(livre.getId())
-                .orElseThrow(() -> new RuntimeException("Aucun exemplaire disponible pour ce livre"));
-
-        // 3. Vérifier que l'adhérent n'a pas de sanction en cours
-        if (penalisationRepository.existsByAdherentIdAndEtat(adherent.getId(), Penalisation.Etat.EN_COURS)) {
-            throw new RuntimeException("Vous avez une sanction en cours");
-        }
-
-        // 4. Vérifier le quota d'emprunt
-        long nbPretsEnCours = pretRepository.countByAdherentIdAndStatutPret(adherent.getId(), Pret.StatutPret.EN_COURS);
-        if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
-            throw new RuntimeException("Quota d'emprunt atteint (" + adherent.getProfil().getQuota() + " livres maximum)");
-        }
-
-        // 5. Vérifier si le livre est restreint (âge < 18 ans)
-        if (livre.isRestreint() && adherent.getAge() < 18) {
-            throw new RuntimeException("Ce livre est restreint aux mineurs");
-        }
-
-        // 6. Vérifier que l'adhérent est abonné
-        if (!abonnementRepository.existsByAdherentIdAndDateFinAfter(adherent.getId(), LocalDate.now())) {
-            throw new RuntimeException("Votre abonnement n'est pas valide");
-        }
-
-        // Créer le prêt
-        Pret pret = new Pret();
-        pret.setAdherent(adherent);
-        pret.setExemplaire(exemplaire);
-        pret.setDateRetourPrevue(LocalDate.now().plusDays(adherent.getProfil().getNbrJourPretPenalite()));
-        pret.setTypePret(Pret.TypePret.EMPORTE);
-        pret.setStatutPret(Pret.StatutPret.EN_DEMANDE);
-        pret.setEtatTraitement(Pret.EtatTraitement.EN_ATTENTE);
-
-        // Marquer l'exemplaire comme indisponible
-        exemplaire.setDisponible(false);
-        exemplaireRepository.save(exemplaire);
-
-        return pretRepository.save(pret);
+    if (hasTitre && hasAuteur) {
+        livre = livreRepository.findByTitreAndAuteur(titre, auteur)
+                .orElseThrow(() -> new RuntimeException("Livre non trouvé avec ce titre et cet auteur"));
+    } else if (hasTitre) {
+        livre = livreRepository.findByTitre(titre)
+                .orElseThrow(() -> new RuntimeException("Livre non trouvé avec ce titre"));
+    } else if (hasAuteur) {
+        livre = livreRepository.findByAuteur(auteur)
+                .orElseThrow(() -> new RuntimeException("Livre non trouvé avec cet auteur"));
+    } else {
+        throw new RuntimeException("Vous devez fournir au moins un titre ou un auteur");
     }
 
+    // 2. Vérifier qu'il y a un exemplaire disponible
+    Exemplaire exemplaire = exemplaireRepository.findFirstByLivreIdAndDisponibleTrue(livre.getId())
+            .orElseThrow(() -> new RuntimeException("Aucun exemplaire disponible pour ce livre"));
 
+    // 3. Vérifier que l'adhérent n'a pas de sanction en cours
+    if (penalisationRepository.existsByAdherentIdAndEtat(adherent.getId(), Penalisation.Etat.EN_COURS)) {
+        throw new RuntimeException("Vous avez une sanction en cours");
+    }
+
+    // 4. Vérifier le quota d'emprunt
+    long nbPretsEnCours = pretRepository.countByAdherentIdAndStatutPret(adherent.getId(), Pret.StatutPret.EN_COURS);
+    if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
+        throw new RuntimeException("Quota d'emprunt atteint (" + adherent.getProfil().getQuota() + " livres maximum)");
+    }
+
+    // 5. Vérifier si le livre est restreint (âge < 18 ans)
+    if (livre.isRestreint() && adherent.getAge() < 18) {
+        throw new RuntimeException("Ce livre est restreint aux mineurs");
+    }
+
+    // 6. Vérifier que l'adhérent est abonné
+    // if (!abonnementRepository.existsByAdherentIdAndDateFinAfter(adherent.getId(), LocalDate.now())) {
+    //     throw new RuntimeException("Votre abonnement n'est pas valide");
+    // }
+
+    // Créer le prêt
+    Pret pret = new Pret();
+    pret.setAdherent(adherent);
+    pret.setExemplaire(exemplaire);
+    pret.setDateRetourPrevue(LocalDate.now().plusDays(adherent.getProfil().getNbrJourPretPenalite()));
+    pret.setTypePret(Pret.TypePret.EMPORTE);
+    pret.setStatutPret(Pret.StatutPret.EN_DEMANDE);
+    pret.setEtatTraitement(Pret.EtatTraitement.EN_ATTENTE);
+
+    // Marquer l'exemplaire comme indisponible
+    exemplaire.setDisponible(false);
+    exemplaireRepository.save(exemplaire);
+
+    return pretRepository.save(pret);
+}
 }
 
 

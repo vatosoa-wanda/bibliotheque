@@ -16,10 +16,16 @@ public class Profil {
     private String profil;
 
     @Column(nullable = false)
-    private Integer quota;
+    private Integer quota;  // quota de prêt
 
     @Column(name = "nbr_jour_pret_penalite", nullable = false)
     private Integer nbrJourPenalite;
+
+    @Column(name = "quota_reservation", nullable = false)
+    private Integer quotaReservation;
+
+    @Column(name = "quota_prolongement", nullable = false)
+    private Integer quotaProlongement;
 
     @OneToMany(mappedBy = "profil", cascade = CascadeType.ALL)
     private Set<Adherent> adherents = new HashSet<>();
@@ -27,10 +33,12 @@ public class Profil {
     // Constructeurs
     public Profil() {}
 
-    public Profil(String profil, Integer quota, Integer nbrJourPenalite) {
+    public Profil(String profil, Integer quota, Integer nbrJourPenalite, Integer quotaReservation, Integer quotaProlongement) {
         this.profil = profil;
         this.quota = quota;
         this.nbrJourPenalite = nbrJourPenalite;
+        this.quotaReservation = quotaReservation;
+        this.quotaProlongement = quotaProlongement;
     }
 
     // Getters & Setters
@@ -68,6 +76,22 @@ public class Profil {
 
     public void setNbrJourPenalite(Integer nbrJourPenalite) {
         this.nbrJourPenalite = nbrJourPenalite;
+    }
+
+    public Integer getQuotaReservation() {
+        return quotaReservation;
+    }
+
+    public void setQuotaReservation(Integer quotaReservation) {
+        this.quotaReservation = quotaReservation;
+    }
+
+    public Integer getQuotaProlongement() {
+        return quotaProlongement;
+    }
+
+    public void setQuotaProlongement(Integer quotaProlongement) {
+        this.quotaProlongement = quotaProlongement;
     }
 
     public Set<Adherent> getAdherents() {

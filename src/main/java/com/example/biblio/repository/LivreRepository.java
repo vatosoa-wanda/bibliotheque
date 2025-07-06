@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LivreRepository extends JpaRepository<Livre, Long> {
     // Recherche par nom_livre (correspond à votre champ 'titre')
-    List<Livre> findByTitre(String titre);
+    Optional<Livre> findByTitre(String titre);
     
     // Recherche insensible à la casse
     List<Livre> findByTitreIgnoreCase(String titre);
@@ -18,7 +18,7 @@ public interface LivreRepository extends JpaRepository<Livre, Long> {
     List<Livre> findByTitreContaining(String partieTitre);
     
     // Recherche par auteur
-    List<Livre> findByAuteur(String auteur);
+    Optional<Livre> findByAuteur(String auteur);
     
     // Recherche combinée
     List<Livre> findByTitreContainingAndAuteurContaining(String partieTitre, String partieAuteur);

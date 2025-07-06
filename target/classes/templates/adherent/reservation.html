@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Réserver un Livre</title>
+</head>
+<body>
+<h2>Réservation du livre</h2>
+
+<p><strong>Titre :</strong> <span th:text="${livre.titre}"></span></p>
+<p><strong>Auteur :</strong> <span th:text="${livre.auteur}"></span></p>
+
+<form th:action="@{/reserver}" method="post">
+    <input type="hidden" name="exemplaireId" th:value="${exemplaire.id}" />
+    
+    <label for="dateAReserver">Date souhaitée :</label>
+    <input type="datetime-local" id="dateAReserver" name="dateAReserver" required />
+
+    <br><br>
+    <button type="submit">Valider la réservation</button>
+</form>
+
+<a th:href="@{/listeLivres}">Retour à la liste</a>
+</body>
+</html>

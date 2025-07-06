@@ -16,7 +16,7 @@ public class AdherentService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return adherentRepository.findByEmail(email)
+        return adherentRepository.findFirstByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Adherent not found with email: " + email));
     }
 

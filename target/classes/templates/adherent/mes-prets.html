@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mes Prêts</title>
+</head>
+<body>
+    <a th:href="@{/adherent/accueil}">Retour à l’accueil</a>
+    <h1>Mes Prêts</h1>
+    
+    <div th:if="${prets == null or prets.empty}">
+        <p>Aucun prêt en cours</p>
+    </div>
+    
+    <table border="1" th:unless="${prets == null or prets.empty}">
+        <thead>
+            <tr>
+                <th>Livre</th>
+                <th>Date début</th>
+                <th>Date retour prévue</th>
+                <th>Statut</th>
+                <th>État traitement</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="pret : ${prets}">
+                <td th:text="${pret.exemplaire?.livre?.titre} ?: 'N/A'">-</td>
+                <td th:text="${pret.dateDebut != null} ? ${#temporals.format(pret.dateDebut, 'dd/MM/yyyy HH:mm')} : 'N/A'"></td>
+                <td th:text="${pret.dateRetourPrevue != null} ? ${#temporals.format(pret.dateRetourPrevue, 'dd/MM/yyyy')} : 'N/A'"></td>
+                <td th:text="${pret.statutPret?.name()} ?: 'N/A'"></td>
+                <td th:text="${pret.etatTraitement?.name()} ?: 'N/A'"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

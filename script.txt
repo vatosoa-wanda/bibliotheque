@@ -1,4 +1,1 @@
-cree la view pour demander un pret par un adherent avec les infos :
-
-dans LivreService
-
+erreur : "Parameter value [EN_COURS] did not match expected type [SqmBasicValuedSimplePath(com.example.biblio.model.Penalisation(1534251674384700).etat)]",

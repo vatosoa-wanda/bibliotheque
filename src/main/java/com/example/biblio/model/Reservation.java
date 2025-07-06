@@ -14,6 +14,9 @@ public class Reservation {
     @Column(name = "date_reservation")
     private LocalDateTime dateReservation = LocalDateTime.now();
 
+    @Column(name = "date_a_reserver", nullable = false)
+    private LocalDateTime dateAReserver;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_adherent", nullable = false)
     private Adherent adherent;
@@ -26,7 +29,6 @@ public class Reservation {
     @Column(length = 20)
     private EtatReservation etat = EtatReservation.EN_COURS;
 
-    // Enumération des états possibles
     public enum EtatReservation {
         EN_COURS,
         VALIDE,
@@ -34,15 +36,16 @@ public class Reservation {
     }
 
     // Constructeurs
-    public Reservation() {
-    }
+    public Reservation() {}
 
-    public Reservation(Adherent adherent, Exemplaire exemplaire) {
+    public Reservation(Adherent adherent, Exemplaire exemplaire, LocalDateTime dateAReserver) {
         this.adherent = adherent;
         this.exemplaire = exemplaire;
+        this.dateAReserver = dateAReserver;
     }
 
     // Getters & Setters
+
     public Long getId() {
         return id;
     }
@@ -57,6 +60,14 @@ public class Reservation {
 
     public void setDateReservation(LocalDateTime dateReservation) {
         this.dateReservation = dateReservation;
+    }
+
+    public LocalDateTime getDateAReserver() {
+        return dateAReserver;
+    }
+
+    public void setDateAReserver(LocalDateTime dateAReserver) {
+        this.dateAReserver = dateAReserver;
     }
 
     public Adherent getAdherent() {
