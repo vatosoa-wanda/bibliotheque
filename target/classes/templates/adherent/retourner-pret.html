@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Retourner un prêt</title>
+</head>
+<body>
+    <h1>Retourner un prêt</h1>
+    
+    <form th:action="@{/retourner-pret/} + ${pret.id}" method="post">
+        <input type="hidden" th:value="${pret.id}" name="pretId">
+        
+        <div>
+            <label>Livre: </label>
+            <span th:text="${pret.exemplaire.livre.titre}"></span>
+        </div>
+        
+        <div>
+            <label>Date de retour prévue: </label>
+            <span th:text="${#temporals.format(pret.dateRetourPrevue, 'dd/MM/yyyy')}"></span>
+        </div>
+        
+        <div>
+            <label for="dateRetourEffective">Date de retour effective: </label>
+            <input type="date" id="dateRetourEffective" name="dateRetourEffective" 
+                   th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}">
+        </div>
+        
+        <button type="submit">Confirmer le retour</button>
+    </form>
+</body>
+</html>
