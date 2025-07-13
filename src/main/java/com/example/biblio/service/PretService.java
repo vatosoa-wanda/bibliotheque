@@ -269,6 +269,53 @@ public class PretService {
         
         return pretRepository.save(pret);
     }
+
+
+    public void traiterRetourPret(Long pretId, LocalDate dateRetourEffective) {
+        Pret pret = pretRepository.findById(pretId)
+                .orElseThrow(() -> new RuntimeException("Prêt non trouvé"));
+        
+        // Vérifier que le prêt est bien en cours et validé
+        if (pret.getStatutPret() != Pret.StatutPret.EN_COURS || 
+            pret.getEtatTraitement() != Pret.EtatTraitement.VALIDE) {
+            throw new IllegalStateException("Ce prêt n'est pas éligible au retour");
+        }
+        
+        // Mettre à jour le prêt
+        pret.setDateRetourEffective(dateRetourEffective);
+        
+        // Déterminer le statut final
+        if (dateRetourEffective.isAfter(pret.getDateRetourPrevue())) {
+            pret.setStatutPret(Pret.StatutPret.RETARD);
+            creerPenalisation(pret);
+        } else {
+            pret.setStatutPret(Pret.StatutPret.RETOURNE);
+        }
+
+        // Rendre l'exemplaire disponible
+        Exemplaire exemplaire = pret.getExemplaire();
+        exemplaire.setDisponible(true);
+        
+        pretRepository.save(pret);
+    }
+
+    private void creerPenalisation(Pret pret) {
+        Profil profil = pret.getAdherent().getProfil();
+        LocalDate dateFinPenalisation = LocalDate.now().plusDays(profil.getNbrJourPenalite());
+        
+        Penalisation penalisation = new Penalisation(
+            pret.getAdherent(),
+            LocalDate.now(),
+            dateFinPenalisation,
+            Penalisation.Etat.EN_COURS
+        );
+        
+        penalisationRepository.save(penalisation);
+    }
+
+    public Optional<Pret> findById(Long id) {
+        return pretRepository.findById(id);
+    }
 }
 
 

@@ -48,6 +48,12 @@
                           method="post">
                         <button type="submit" class="btn-prolonger">Prolonger</button>
                     </form>
+                    <!-- Nouveau formulaire de retour -->
+                    <form th:if="${pret.statutPret?.name() == 'EN_COURS' and pret.etatTraitement?.name() == 'VALIDE'}" 
+                        th:action="@{/retourner-pret/} + ${pret.id}" 
+                        method="get">
+                    <button type="submit" class="btn-retourner">Retourner</button>
+                    </form>
                     <span th:unless="${pret.statutPret?.name() == 'EN_COURS'}">-</span>
                 </td>
             </tr>

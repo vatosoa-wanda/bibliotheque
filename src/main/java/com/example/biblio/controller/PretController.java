@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 public class PretController {
@@ -111,4 +111,37 @@ public class PretController {
     }
 
 
+    
+
+    // Affiche le formulaire de retour
+    @GetMapping("/retourner-pret/{pretId}")
+    public String afficherFormulaireRetour(@PathVariable Long pretId, Model model) {
+        Pret pret = pretService.findById(pretId)
+                .orElseThrow(() -> new RuntimeException("Prêt non trouvé"));
+        model.addAttribute("pret", pret);
+        return "adherent/retourner-pret";
+    }
+
+    // Traite le retour
+    @PostMapping("/retourner-pret/{pretId}")
+    public String traiterRetour(
+            @PathVariable Long pretId,
+            @RequestParam("dateRetourEffective") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateRetourEffective,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            pretService.traiterRetourPret(pretId, dateRetourEffective);
+            redirectAttributes.addFlashAttribute("success", "Le retour a été enregistré avec succès");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erreur lors du retour: " + e.getMessage());
+        }
+        
+        return "redirect:/mes-prets";
+    }
+
+
 }
+
+
+
+
