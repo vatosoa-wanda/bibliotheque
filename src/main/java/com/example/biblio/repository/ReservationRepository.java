@@ -32,4 +32,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     
     // Vérifier si un exemplaire a déjà une réservation en cours
     boolean existsByExemplaireIdAndEtat(Long exemplaireId, Reservation.EtatReservation etat);
+
+    long countByAdherentIdAndEtat(Long adherentId, Reservation.EtatReservation etat);
 }

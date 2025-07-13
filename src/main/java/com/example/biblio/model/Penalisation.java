@@ -22,8 +22,13 @@ public class Penalisation {
     @Column(name = "date_fin", nullable = false)
     private LocalDate dateFin;
 
+    // @Column(nullable = false, length = 20)
+    // private String etat = "en_cours"; // valeurs possibles : en_cours, termine
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String etat = "en_cours"; // valeurs possibles : en_cours, termine
+    private Etat etat = Etat.EN_COURS;
+
 
     public enum Etat {
         EN_COURS, TERMINE
@@ -32,12 +37,31 @@ public class Penalisation {
     // Constructeurs
     public Penalisation() {}
 
-    public Penalisation(Adherent adherent, LocalDate dateDebut, LocalDate dateFin, String etat) {
-        this.adherent = adherent;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.etat = etat;
-    }
+    // public Penalisation(Adherent adherent, LocalDate dateDebut, LocalDate dateFin, String etat) {
+    //     this.adherent = adherent;
+    //     this.dateDebut = dateDebut;
+    //     this.dateFin = dateFin;
+    //     this.etat = etat;
+    // }
+
+    // Constructeur avec enum
+public Penalisation(Adherent adherent, LocalDate dateDebut, LocalDate dateFin, Etat etat) {
+    this.adherent = adherent;
+    this.dateDebut = dateDebut;
+    this.dateFin = dateFin;
+    this.etat = etat;
+}
+
+// ✅ Getter
+public Etat getEtat() {
+    return etat;
+}
+
+// ✅ Setter
+public void setEtat(Etat etat) {
+    this.etat = etat;
+}
+
 
     // Getters et Setters
     public Long getId() {
@@ -72,11 +96,11 @@ public class Penalisation {
         this.dateFin = dateFin;
     }
 
-    public String getEtat() {
-        return etat;
-    }
+    // public String getEtat() {
+    //     return etat;
+    // }
 
-    public void setEtat(String etat) {
-        this.etat = etat;
-    }
+    // public void setEtat(String etat) {
+    //     this.etat = etat;
+    // }
 }
