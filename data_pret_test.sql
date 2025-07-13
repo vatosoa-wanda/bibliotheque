@@ -1,3 +1,16 @@
+INSERT INTO Utilisateur (username, password) 
+VALUES ('bibliothecaire', '2');
+
+-- Profils
+-- INSERT INTO Profil (profil, quota, nbr_jour_pret_penalite) VALUES 
+-- ('Standard', 5, 14),
+-- ('Premium', 4, 21),
+-- ('Jeunesse', 3, 21);
+INSERT INTO Profil (profil, quota, nbr_jour_pret_penalite, quota_reservation, quota_prolongement) VALUES 
+('Standard', 5, 14, 3, 2),
+('Premium', 4, 21, 5, 3),
+('Jeunesse', 3, 21, 2, 1);
+ 
 
 INSERT INTO Utilisateur (username, password) 
 VALUES ('bibliothecaire', '2');
@@ -70,9 +83,7 @@ VALUES (3, '2023-09-15', '2023-12-15', 'en_cours');
 -- Modification de l'abonnement de l'adhérent 2 pour qu'il soit expiré
 UPDATE Abonnement SET date_fin = '2023-09-30' WHERE id_adherent = 2;
 
-<<<<<<< Updated upstream
--- Tentative de prêt doit échouer
-=======
+
 -- Tentative de prêt doit échouer
 
 INSERT INTO Pret (id_adherent, id_exemplaire, date_retour_prevue, type_pret, statut_pret, etat_traitement)
@@ -88,4 +99,3 @@ INSERT INTO Abonnement (id_adherent, date_debut, date_fin, actif) VALUES
 
 INSERT INTO Abonnement (id_adherent, date_debut, date_fin, actif) VALUES
 (2, '2024-06-01', '2024-12-31', false);
->>>>>>> Stashed changes

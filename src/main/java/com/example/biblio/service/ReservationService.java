@@ -24,10 +24,7 @@ public class ReservationService {
 
     public ReservationService(ReservationRepository reservationRepository, AbonnementRepository abonnementRepository ) {
         this.reservationRepository = reservationRepository;
-<<<<<<< Updated upstream
-=======
         this.abonnementRepository = abonnementRepository;
->>>>>>> Stashed changes
     }
 
     // Créer une nouvelle réservation
@@ -71,8 +68,7 @@ public class ReservationService {
     public List<Reservation> getReservationsEnCours() {
         return reservationRepository.findByEtat(Reservation.EtatReservation.EN_COURS);
     }
-<<<<<<< Updated upstream
-=======
+
 
     public void createReservation(Adherent adherent, Exemplaire exemplaire, LocalDateTime dateAReserver) {
         // 4. Vérifier que l'adhérent a un abonnement valide
@@ -115,5 +111,4 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
->>>>>>> Stashed changes
 }
