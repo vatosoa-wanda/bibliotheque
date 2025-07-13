@@ -126,6 +126,7 @@ public class PretService {
         );
     }
 
+<<<<<<< Updated upstream
 
     @Transactional
     public Pret demanderPret(String titre, String auteur, Adherent adherent) {
@@ -133,6 +134,29 @@ public class PretService {
         Livre livre = livreRepository.findByTitreAndAuteur(titre, auteur)
                 .orElseThrow(() -> new RuntimeException("Livre non trouvé"));
 
+=======
+    @Transactional
+    public Pret demanderPret(String titre, String auteur, Adherent adherent) {
+        // 1. Vérifier que le livre existe (recherche flexible)
+        Livre livre;
+
+        boolean hasTitre = titre != null && !titre.isBlank();
+        boolean hasAuteur = auteur != null && !auteur.isBlank();
+
+        if (hasTitre && hasAuteur) {
+            livre = livreRepository.findByTitreAndAuteur(titre, auteur)
+                    .orElseThrow(() -> new RuntimeException("Livre non trouvé avec ce titre et cet auteur"));
+        } else if (hasTitre) {
+            livre = livreRepository.findByTitre(titre)
+                    .orElseThrow(() -> new RuntimeException("Livre non trouvé avec ce titre"));
+        } else if (hasAuteur) {
+            livre = livreRepository.findByAuteur(auteur)
+                    .orElseThrow(() -> new RuntimeException("Livre non trouvé avec cet auteur"));
+        } else {
+            throw new RuntimeException("Vous devez fournir au moins un titre ou un auteur");
+        }
+
+>>>>>>> Stashed changes
         // 2. Vérifier qu'il y a un exemplaire disponible
         Exemplaire exemplaire = exemplaireRepository.findFirstByLivreIdAndDisponibleTrue(livre.getId())
                 .orElseThrow(() -> new RuntimeException("Aucun exemplaire disponible pour ce livre"));
@@ -173,8 +197,11 @@ public class PretService {
 
         return pretRepository.save(pret);
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 }
 
 

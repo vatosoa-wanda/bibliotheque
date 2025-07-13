@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Liste des Livres</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Liste des Livres</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Restreint</th>
+        <th>Nombre d'exemplaires</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="livre : ${livres}">
+        <td th:text="${livre.titre}"></td>
+        <td th:text="${livre.auteur}"></td>
+        <td th:text="${livre.restreint ? 'Oui' : 'Non'}"></td>
+        <td th:text="${livre.exemplaires.size()}"></td>
+        <td>
+            <a th:href="@{/reserver/{id}(id=${livre.id})}">Réserver</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/adherent/accueil}">Retour à l’accueil</a>
+</body>
+</html>

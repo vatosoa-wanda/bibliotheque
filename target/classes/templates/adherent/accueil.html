@@ -5,9 +5,24 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
+<<<<<<< Updated upstream
     <h1>Bienvenue Adhérent <span th:text="${#authentication.name}">Adherent</span></h1>
 
     <h1>Bienvenue <span th:text="${sessionAdherent.prenom} + ' ' + ${sessionAdherent.nom}">Utilisateur</span>!</h1>
+=======
+
+    <nav>
+        <a th:href="@{/pret}">Prêter un livre</a>
+        <a th:href="@{/mes-prets}">Mes prêts</a>
+        <a th:href="@{/listeLivres}">Livres</a>
+        <a th:href="@{/mes-reservations}">Mes réservations</a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Se déconnecter</button>
+        </form>
+    </nav>
+
+    <h3>Bienvenue <span th:text="${sessionAdherent.prenom} + ' ' + ${sessionAdherent.nom}">Utilisateur</span>!</h3>
+>>>>>>> Stashed changes
     <p>Email : <span th:text="${sessionAdherent.email}"></span></p>
 
     <p>Page réservée aux adhérents</p>

@@ -1,9 +1,11 @@
 package com.example.biblio.repository;
 
 import com.example.biblio.model.Abonnement;
+import com.example.biblio.model.Adherent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,4 +31,13 @@ public interface AbonnementRepository extends JpaRepository<Abonnement, Long> {
     boolean hasAbonnementActif(Long adherentId);
 
     boolean existsByAdherentIdAndDateFinAfter(Long adherentId, LocalDate date);
+
+    @Query("SELECT COUNT(a) > 0 FROM Abonnement a " +
+           "WHERE a.adherent = :adherent " +
+           "AND a.dateDebut <= :currentDate " +
+           "AND a.dateFin >= :currentDate")
+    boolean existsByAdherentAndDateDebutBeforeAndDateFinAfter(
+            @Param("adherent") Adherent adherent,
+            @Param("currentDate") LocalDate currentDate);
+
 }

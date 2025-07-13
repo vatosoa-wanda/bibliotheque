@@ -21,24 +21,23 @@ public class Abonnement {
     @Column(name = "date_fin", nullable = false)
     private LocalDate dateFin;
 
-    // @Column(nullable = false)
-    // private boolean actif = true;
-
     @Column(name = "actif", nullable = false)
-    private boolean actif = true; // Valeur par défaut
-
+    private boolean actif;
 
     // Constructeurs
-    public Abonnement() {}
+    public Abonnement() {
+        this.actif = false; // Par défaut inactif jusqu'à initialisation des dates
+    }
 
     public Abonnement(Adherent adherent, LocalDate dateDebut, LocalDate dateFin) {
+        if (dateDebut.isAfter(dateFin)) {
+            throw new IllegalArgumentException("La date de début doit être avant la date de fin");
+        }
+        
         this.adherent = adherent;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        // this.actif = !LocalDate.now().isAfter(dateFin); // Définit automatiquement l'état actif
-        // Dans le constructeur
-        this.actif = this.dateFin.isAfter(LocalDate.now()) || this.dateFin.isEqual(LocalDate.now());
-
+        this.actif = calculerEtatActif(); // Calcul initial basé sur les dates
     }
 
     // Getters & Setters
@@ -64,6 +63,7 @@ public class Abonnement {
 
     public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
+        this.actif = calculerEtatActif();
     }
 
     public LocalDate getDateFin() {
@@ -72,20 +72,37 @@ public class Abonnement {
 
     public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
-        this.actif = !LocalDate.now().isAfter(dateFin); // Met à jour l'état actif
+        this.actif = calculerEtatActif();
     }
 
     public boolean isActif() {
-        return actif && !LocalDate.now().isAfter(dateFin); // Vérification dynamique
+        return calculerEtatActif(); // Toujours calculé dynamiquement
     }
 
     public void setActif(boolean actif) {
-        this.actif = actif;
+        // On ne permet pas de forcer manuellement l'état actif
+        // car il doit être déterminé par les dates
+        throw new UnsupportedOperationException("L'état actif est déterminé automatiquement par les dates");
     }
 
-    // Méthode utilitaire pour vérifier si l'abonnement est valide
-    public boolean estValide() {
+    // Méthodes utilitaires
+    private boolean calculerEtatActif() {
+        if (dateDebut == null || dateFin == null) {
+            return false;
+        }
         LocalDate aujourdhui = LocalDate.now();
         return !aujourdhui.isBefore(dateDebut) && !aujourdhui.isAfter(dateFin);
+    }
+
+    public boolean estValide() {
+        return calculerEtatActif();
+    }
+
+    // Méthode pour vérifier si l'abonnement sera actif à une date donnée
+    public boolean seraActifA(LocalDate date) {
+        if (dateDebut == null || dateFin == null) {
+            return false;
+        }
+        return !date.isBefore(dateDebut) && !date.isAfter(dateFin);
     }
 }

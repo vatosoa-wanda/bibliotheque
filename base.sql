@@ -61,9 +61,10 @@ CREATE TABLE Abonnement (
     id_abonnement SERIAL PRIMARY KEY,
     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
     date_debut DATE NOT NULL,
-    date_fin DATE NOT NULL
+    date_fin DATE NOT NULL,
+    actif BOOLEAN
 );
-ALTER TABLE abonnement ADD COLUMN actif BOOLEAN;
+-- ALTER TABLE abonnement ADD COLUMN actif BOOLEAN;
 
 -- Table Reservation
 CREATE TABLE Reservation (
