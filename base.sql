@@ -1,4 +1,7 @@
-create database biblio;
+\c postgres
+DROP DATABASE IF EXISTS biblio;
+CREATE DATABASE biblio;
+
 \c biblio;
 
 
@@ -24,12 +27,22 @@ CREATE TABLE Exemplaire (
 );
 
 -- Table Profil
+-- CREATE TABLE Profil (
+--     id_profil SERIAL PRIMARY KEY,
+--     profil VARCHAR(50) NOT NULL,
+--     quota INTEGER NOT NULL,
+--     nbr_jour_pret_penalite INTEGER NOT NULL
+-- );
+
 CREATE TABLE Profil (
     id_profil SERIAL PRIMARY KEY,
     profil VARCHAR(50) NOT NULL,
-    quota INTEGER NOT NULL,
-    nbr_jour_pret_penalite INTEGER NOT NULL
+    quota INTEGER NOT NULL, -- quota pret
+    nbr_jour_pret_penalite INTEGER NOT NULL,
+    quota_reservation INTEGER NOT NULL DEFAULT 3,
+    quota_prolongement INTEGER NOT NULL DEFAULT 2
 );
+
 
 
 CREATE TABLE Adherent (
@@ -53,7 +66,7 @@ CREATE TABLE Penalisation (
     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
     date_debut DATE NOT NULL,
     date_fin DATE NOT NULL,
-    etat VARCHAR(20) CHECK (etat IN ('en_cours', 'termine')) DEFAULT 'en_cours'
+    etat VARCHAR(20) CHECK (etat IN ('EN_COURS', 'TERMINE')) DEFAULT 'EN_COURS'
 );
 
 -- Table Abonnement
@@ -70,23 +83,55 @@ CREATE TABLE Abonnement (
 CREATE TABLE Reservation (
     id_reservation SERIAL PRIMARY KEY,
     date_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_a_reserver TIMESTAMP NOT NULL,  -- champ ajouté en TIMESTAMP
     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
     id_exemplaire INTEGER NOT NULL REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
-    etat VARCHAR(20) CHECK (etat IN ('en_cours', 'valide', 'annule')) DEFAULT 'en_cours'
+    etat VARCHAR(20) CHECK (etat IN ('EN_COURS', 'VALIDE', 'ANNULE')) DEFAULT 'EN_COURS'
 );
 
+-- CREATE TABLE Reservation (
+--     id_reservation SERIAL PRIMARY KEY,
+--     date_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
+--     id_exemplaire INTEGER NOT NULL REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
+--     etat VARCHAR(20) CHECK (etat IN ('EN_COURS', 'VALIDE', 'ANNULE')) DEFAULT 'EN_COURS'
+-- );
+
+
+
 -- Table Pret
+-- CREATE TABLE Pret (
+--     id_pret SERIAL PRIMARY KEY,
+--     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
+--     id_exemplaire INTEGER NOT NULL REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
+--     date_debut TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     date_retour_prevue DATE NOT NULL,
+--     date_retour_effective DATE,
+--     type_pret VARCHAR(20) CHECK (type_pret IN ('sur_place', 'emporte')),
+--     statut_pret VARCHAR(20) CHECK (statut_pret IN ('en_demande', 'en_cours', 'retourne', 'retard')) DEFAULT 'en_demande',
+--     etat_traitement VARCHAR(20) CHECK (etat_traitement IN ('en_attente', 'valide', 'rejete', 'annule')) DEFAULT 'en_attente'
+-- );
+
+-- Table Pret (corrigée pour Enum Java)
 CREATE TABLE Pret (
     id_pret SERIAL PRIMARY KEY,
-    id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
-    id_exemplaire INTEGER NOT NULL REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
+    
+    id_adherent INTEGER NOT NULL 
+        REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
+    
+    id_exemplaire INTEGER NOT NULL 
+        REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
+    
     date_debut TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_retour_prevue DATE NOT NULL,
     date_retour_effective DATE,
-    type_pret VARCHAR(20) CHECK (type_pret IN ('sur_place', 'emporte')),
-    statut_pret VARCHAR(20) CHECK (statut_pret IN ('en_demande', 'en_cours', 'retourne', 'retard')) DEFAULT 'en_demande',
-    etat_traitement VARCHAR(20) CHECK (etat_traitement IN ('en_attente', 'valide', 'rejete', 'annule')) DEFAULT 'en_attente'
+    type_pret VARCHAR(20) CHECK (type_pret IN ('SUR_PLACE', 'EMPORTE')),
+    statut_pret VARCHAR(20) DEFAULT 'EN_DEMANDE' 
+        CHECK (statut_pret IN ('EN_DEMANDE', 'EN_COURS', 'RETOURNE', 'RETARD')),
+    etat_traitement VARCHAR(20) DEFAULT 'EN_ATTENTE'
+        CHECK (etat_traitement IN ('EN_ATTENTE', 'VALIDE', 'REJETE', 'ANNULE'))
 );
+
 
 -- Table Prolongement
 CREATE TABLE Prolongement (
@@ -95,7 +140,8 @@ CREATE TABLE Prolongement (
     date_debut DATE NOT NULL,
     date_retour_prevue DATE NOT NULL,
     date_retour_effective DATE,
-    etat_traitement VARCHAR(20) CHECK (etat_traitement IN ('en_attente', 'valide', 'rejete', 'annule')) DEFAULT 'en_attente'
+    etat_traitement VARCHAR(20) CHECK (etat_traitement IN ('EN_ATTENTE', 'VALIDE', 'REJETE', 'ANNULE')) DEFAULT 'en_attente'
+    -- etat_traitement VARCHAR(20) CHECK (etat_traitement IN ('en_attente', 'valide', 'rejete', 'annule')) DEFAULT 'en_attente'
 );
 
 -- Table JourFerie
