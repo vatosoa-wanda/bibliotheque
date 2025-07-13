@@ -5,11 +5,15 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-    <h1>Bienvenue Administrateur <span th:text="${#authentication.name}">Admin</span></h1>
-    <p>Page réservée aux utilisateurs avec rôle USER (bibliothécaires)</p>
-    <!-- <a href="/logout">Se déconnecter</a> -->
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Se déconnecter</button>
-    </form>
+    <nav>
+        <a th:href="@{/listeLivres}">Prolongement a valider</a>
+        <a th:href="@{/reservation_en_cours}">Reservations a valider</a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Se déconnecter</button>
+        </form>
+    </nav>
+
+    <h3>Bienvenue Administrateur <span th:text="${#authentication.name}">Admin</span></h3>
+    
 </body>
 </html>

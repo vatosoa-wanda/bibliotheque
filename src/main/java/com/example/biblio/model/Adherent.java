@@ -40,7 +40,7 @@ public class Adherent implements UserDetails {
 
     private String adresse;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_profil", nullable = false)
     private Profil profil;
 

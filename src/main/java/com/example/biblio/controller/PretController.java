@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+
 
 @Controller
 public class PretController {
@@ -60,5 +62,24 @@ public class PretController {
         }
         
         return "redirect:/pret";
+    }
+
+    @GetMapping("/mes-prets")
+    public String afficherPretsAdherent(HttpSession session, Model model) {
+        // Récupération de l'adhérent depuis la session
+        Adherent adherent = (Adherent) session.getAttribute("sessionAdherent");
+
+        if (adherent == null) {
+            // Redirection vers la page de connexion si non connecté
+            return "redirect:/login";
+        }
+
+        // Récupération des prêts de l’adhérent via le service
+        List<Pret> prets = pretService.getPretsByAdherent(adherent.getId());
+
+        // Passage des prêts au modèle pour affichage
+        model.addAttribute("prets", prets);
+
+        return "adherent/mes-prets";  // correspond à mes-prets.html dans templates
     }
 }

@@ -5,6 +5,7 @@ import com.example.biblio.model.Livre;
 import com.example.biblio.repository.ExemplaireRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -57,5 +58,10 @@ public class ExemplaireService {
 
     public List<Exemplaire> findDisponiblesByLivreId(Long livreId) {
         return exemplaireRepository.findByLivreIdAndDisponibleTrue(livreId);
+    }
+
+    public Exemplaire getExemplaireById(Long id) {
+        Optional<Exemplaire> opt = exemplaireRepository.findById(id);
+        return opt.orElse(null); // ou lever une exception si tu préfères
     }
 }
