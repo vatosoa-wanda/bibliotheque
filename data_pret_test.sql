@@ -101,8 +101,10 @@ INSERT INTO Abonnement (id_adherent, date_debut, date_fin, actif) VALUES
 (2, '2024-06-01', '2024-12-31', false);
 
 INSERT INTO Abonnement (id_adherent, date_debut, date_fin, actif) VALUES
+(2, '2025-05-01', '2025-09-25', true);
+INSERT INTO Abonnement (id_adherent, date_debut, date_fin, actif) VALUES
 (3, '2025-01-01', '2025-09-25', true);
 
 
 INSERT INTO Penalisation (id_adherent, date_debut, date_fin, etat)
-VALUES (3, '2025-07-10', '2023-07-17', 'EN_COURS');
+VALUES (2, '2025-07-10', '2023-07-17', 'EN_COURS');

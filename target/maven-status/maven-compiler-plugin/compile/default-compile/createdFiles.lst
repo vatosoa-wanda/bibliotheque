@@ -3,6 +3,7 @@ com\example\biblio\service\LivreService.class
 com\example\biblio\model\Pret.class
 com\example\biblio\controller\LivreController.class
 com\example\biblio\model\Pret$EtatTraitement.class
+com\example\biblio\controller\ProlongementController.class
 com\example\biblio\model\Profil.class
 com\example\biblio\model\Abonnement.class
 com\example\biblio\service\CombinedUserDetailsService.class

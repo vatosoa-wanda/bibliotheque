@@ -82,4 +82,33 @@ public class PretController {
 
         return "adherent/mes-prets";  // correspond à mes-prets.html dans templates
     }
+
+    // @PostMapping("/prolonger-pret/{id}")
+    // public String prolongerPret(@PathVariable Long id) {
+    //     // Logique pour prolonger le prêt
+    //     return "redirect:/mes-prets";
+    // }
+    @PostMapping("/prolonger-pret/{id}")
+    public String prolongerPret(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            // 1. Prolonger le prêt via le service
+            pretService.prolongerPret(id);
+            
+            // 2. Ajouter un message de succès
+            redirectAttributes.addFlashAttribute("success", "Le prêt a été prolongé avec succès");
+            
+        } catch (RuntimeException e) {
+            // 3. Gérer les erreurs métier
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            
+        } catch (Exception e) {
+            // 4. Gérer les autres erreurs inattendues
+            redirectAttributes.addFlashAttribute("error", "Une erreur technique est survenue");
+        }
+        
+        // 5. Rediriger vers la liste des prêts
+        return "redirect:/mes-prets";
+    }
+
+
 }
