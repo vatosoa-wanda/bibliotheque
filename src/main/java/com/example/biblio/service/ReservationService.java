@@ -138,4 +138,9 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
+
+    public boolean estExemplaireReserveALaDate(Exemplaire exemplaire, LocalDateTime date) {
+        return reservationRepository.existsByExemplaireAndEtatValideAndDate(exemplaire, date);
+    }
+
 }

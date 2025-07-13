@@ -19,19 +19,24 @@ public class PretService {
     private final AdherentRepository adherentRepository;
     private final PenalisationRepository penalisationRepository;
     private final AbonnementRepository abonnementRepository;
+    private final ProlongementRepository prolongementRepository;
+    private final ReservationRepository reservationRepository;
 
     // public PretService(PretRepository pretRepository) {
     //     this.pretRepository = pretRepository;
     // }
     public PretService(PretRepository pretRepository, LivreRepository livreRepository,
                      ExemplaireRepository exemplaireRepository, AdherentRepository adherentRepository,
-                     PenalisationRepository penalisationRepository, AbonnementRepository abonnementRepository) {
+                     PenalisationRepository penalisationRepository, AbonnementRepository abonnementRepository,
+                     ProlongementRepository prolongementRepository, ReservationRepository reservationRepository) {
         this.pretRepository = pretRepository;
         this.livreRepository = livreRepository;
         this.exemplaireRepository = exemplaireRepository;
         this.adherentRepository = adherentRepository;
         this.penalisationRepository = penalisationRepository;
         this.abonnementRepository = abonnementRepository;
+        this.prolongementRepository = prolongementRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     // Créer un nouveau prêt
@@ -78,21 +83,21 @@ public class PretService {
     }
 
     // Prolonger un prêt
-    @Transactional
-    public Pret prolongerPret(Long pretId, LocalDate nouvelleDateRetour) {
-        Pret pret = getPretById(pretId);
-        pret.setDateRetourPrevue(nouvelleDateRetour);
+    // @Transactional
+    // public Pret prolongerPret(Long pretId, LocalDate nouvelleDateRetour) {
+    //     Pret pret = getPretById(pretId);
+    //     pret.setDateRetourPrevue(nouvelleDateRetour);
         
-        // Créer un historique de prolongement
-        Prolongement prolongement = new Prolongement();
-        prolongement.setPret(pret);
-        prolongement.setDateDebut(LocalDate.now());
-        prolongement.setDateRetourPrevue(nouvelleDateRetour);
-        prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
+    //     // Créer un historique de prolongement
+    //     Prolongement prolongement = new Prolongement();
+    //     prolongement.setPret(pret);
+    //     prolongement.setDateDebut(LocalDate.now());
+    //     prolongement.setDateRetourPrevue(nouvelleDateRetour);
+    //     prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
         
-        pret.addProlongement(prolongement);
-        return pretRepository.save(pret);
-    }
+    //     pret.addProlongement(prolongement);
+    //     return pretRepository.save(pret);
+    // }
 
     // Récupérer un prêt par son ID
     public Pret getPretById(Long id) {
@@ -190,6 +195,80 @@ public class PretService {
         return pretRepository.save(pret);
     }
 
+
+    @Transactional
+    public Pret prolongerPret(Long pretId) {
+        // 1. Vérifier que le prêt existe et est en cours
+        Pret pret = pretRepository.findById(pretId)
+                .orElseThrow(() -> new RuntimeException("Prêt introuvable"));
+        
+        if (pret.getStatutPret() != Pret.StatutPret.EN_COURS) {
+            throw new RuntimeException("Seuls les prêts en cours peuvent être prolongés");
+        }
+
+        Adherent adherent = pret.getAdherent();
+        Exemplaire exemplaire = pret.getExemplaire();
+
+        // 2. Vérifications de base
+        if (exemplaire == null) {
+            throw new RuntimeException("Exemplaire introuvable");
+        }
+        if (penalisationRepository.existsByAdherentIdAndEtat(adherent.getId(), Penalisation.Etat.EN_COURS)) {
+            throw new RuntimeException("Vous avez une sanction en cours");
+        }
+        if (!abonnementRepository.existsByAdherentIdAndDateFinAfter(adherent.getId(), LocalDate.now())) {
+            throw new RuntimeException("Abonnement non valide");
+        }
+
+        // 3. Vérifier les réservations (version corrigée)
+        LocalDateTime maintenant = LocalDateTime.now();
+        if (reservationRepository.existsByExemplaireAndEtatValideAndDate(
+                exemplaire, 
+                maintenant)) {
+            throw new RuntimeException("L'exemplaire est réservé");
+        }
+
+        // 4. Vérifier le quota de prolongement de l'adhérent (version corrigée)
+        long nbProlongementsValides = prolongementRepository.countByPretAdherentAndEtatTraitement(
+                adherent, 
+                Prolongement.EtatTraitement.VALIDE);
+        
+        if (nbProlongementsValides >= adherent.getProfil().getQuotaProlongement()) {
+            throw new RuntimeException("Quota de prolongement atteint (" + 
+                adherent.getProfil().getQuotaProlongement() + " maximum)");
+        }
+
+        // 4. Vérifier le quota de prolongement
+        int nbProlongements = pret.getProlongements().stream()
+                .filter(p -> p.getEtatTraitement() == Prolongement.EtatTraitement.VALIDE)
+                .toList()
+                .size();
+        
+        if (nbProlongements >= adherent.getProfil().getQuotaProlongement()) {
+            throw new RuntimeException("Prolonger un pret un seule fois");
+        }
+
+        // 5. Calculer les nouvelles dates
+        LocalDate dateDebutProlongement = LocalDate.now();
+        LocalDate nouvelleDateRetour = dateDebutProlongement.plusDays(
+                adherent.getProfil().getNbrJourPretPenalite());
+
+
+        // 7. Créer et enregistrer le prolongement
+        Prolongement prolongement = new Prolongement();
+        prolongement.setPret(pret);
+        prolongement.setDateDebut(dateDebutProlongement);
+        prolongement.setDateRetourPrevue(nouvelleDateRetour);
+        prolongement.setEtatTraitement(Prolongement.EtatTraitement.EN_ATTENTE);
+        
+        prolongementRepository.save(prolongement);
+        pret.addProlongement(prolongement);
+
+        // 8. Mettre à jour la date de retour du prêt
+        // pret.setDateRetourPrevue(nouvelleDateRetour);
+        
+        return pretRepository.save(pret);
+    }
 }
 
 

@@ -2,9 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Mes Prêts</title>
+    <style>
+        .btn-prolonger {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <a th:href="@{/adherent/accueil}">Retour à l’accueil</a>
+    <a th:href="@{/adherent/accueil}">Retour à l'accueil</a>
     <h1>Mes Prêts</h1>
     
     <div th:if="${prets == null or prets.empty}">
@@ -19,6 +32,7 @@
                 <th>Date retour prévue</th>
                 <th>Statut</th>
                 <th>État traitement</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -28,8 +42,18 @@
                 <td th:text="${pret.dateRetourPrevue != null} ? ${#temporals.format(pret.dateRetourPrevue, 'dd/MM/yyyy')} : 'N/A'"></td>
                 <td th:text="${pret.statutPret?.name()} ?: 'N/A'"></td>
                 <td th:text="${pret.etatTraitement?.name()} ?: 'N/A'"></td>
+                <td>
+                    <form th:if="${pret.statutPret?.name() == 'EN_COURS'}" 
+                          th:action="@{/prolonger-pret/} + ${pret.id}" 
+                          method="post">
+                        <button type="submit" class="btn-prolonger">Prolonger</button>
+                    </form>
+                    <span th:unless="${pret.statutPret?.name() == 'EN_COURS'}">-</span>
+                </td>
             </tr>
         </tbody>
     </table>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 </body>
 </html>
