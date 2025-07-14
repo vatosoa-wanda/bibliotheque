@@ -1,4 +1,0 @@
-cree la view pour demander un pret par un adherent avec les infos :
-
-dans LivreService
-

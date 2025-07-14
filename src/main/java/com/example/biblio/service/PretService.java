@@ -21,6 +21,7 @@ public class PretService {
     private final AbonnementRepository abonnementRepository;
     private final ProlongementRepository prolongementRepository;
     private final ReservationRepository reservationRepository;
+    private final JourFerieService jourFerieService;
 
     // public PretService(PretRepository pretRepository) {
     //     this.pretRepository = pretRepository;
@@ -28,7 +29,8 @@ public class PretService {
     public PretService(PretRepository pretRepository, LivreRepository livreRepository,
                      ExemplaireRepository exemplaireRepository, AdherentRepository adherentRepository,
                      PenalisationRepository penalisationRepository, AbonnementRepository abonnementRepository,
-                     ProlongementRepository prolongementRepository, ReservationRepository reservationRepository) {
+                     ProlongementRepository prolongementRepository, ReservationRepository reservationRepository,
+                     JourFerieService jourFerieService) {
         this.pretRepository = pretRepository;
         this.livreRepository = livreRepository;
         this.exemplaireRepository = exemplaireRepository;
@@ -37,6 +39,7 @@ public class PretService {
         this.abonnementRepository = abonnementRepository;
         this.prolongementRepository = prolongementRepository;
         this.reservationRepository = reservationRepository;
+        this.jourFerieService = jourFerieService;
     }
 
     // Créer un nouveau prêt
@@ -81,23 +84,6 @@ public class PretService {
         
         return pretRepository.save(pret);
     }
-
-    // Prolonger un prêt
-    // @Transactional
-    // public Pret prolongerPret(Long pretId, LocalDate nouvelleDateRetour) {
-    //     Pret pret = getPretById(pretId);
-    //     pret.setDateRetourPrevue(nouvelleDateRetour);
-        
-    //     // Créer un historique de prolongement
-    //     Prolongement prolongement = new Prolongement();
-    //     prolongement.setPret(pret);
-    //     prolongement.setDateDebut(LocalDate.now());
-    //     prolongement.setDateRetourPrevue(nouvelleDateRetour);
-    //     prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
-        
-    //     pret.addProlongement(prolongement);
-    //     return pretRepository.save(pret);
-    // }
 
     // Récupérer un prêt par son ID
     public Pret getPretById(Long id) {
@@ -183,7 +169,15 @@ public class PretService {
         Pret pret = new Pret();
         pret.setAdherent(adherent);
         pret.setExemplaire(exemplaire);
-        pret.setDateRetourPrevue(LocalDate.now().plusDays(adherent.getProfil().getNbrJourPretPenalite()));
+
+        // Avant
+        // pret.setDateRetourPrevue(LocalDate.now().plusDays(adherent.getProfil().getNbrJourPretPenalite()));
+        // Apres
+        // Gestion date retour prevu si jour ferie
+        LocalDate retourInitial = LocalDate.now().plusDays(adherent.getProfil().getNbrJourPretPenalite());
+        LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
+        pret.setDateRetourPrevue(retourAjuste);
+
         pret.setTypePret(Pret.TypePret.EMPORTE);
         pret.setStatutPret(Pret.StatutPret.EN_DEMANDE);
         pret.setEtatTraitement(Pret.EtatTraitement.EN_ATTENTE);
@@ -250,15 +244,23 @@ public class PretService {
 
         // 5. Calculer les nouvelles dates
         LocalDate dateDebutProlongement = LocalDate.now();
-        LocalDate nouvelleDateRetour = dateDebutProlongement.plusDays(
-                adherent.getProfil().getNbrJourPretPenalite());
+        // Avant
+        // LocalDate nouvelleDateRetour = dateDebutProlongement.plusDays(
+                // adherent.getProfil().getNbrJourPretPenalite());
+        // Apres
+        LocalDate retourInitial = dateDebutProlongement.plusDays(adherent.getProfil().getNbrJourPretPenalite());
+        LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
 
 
         // 7. Créer et enregistrer le prolongement
         Prolongement prolongement = new Prolongement();
         prolongement.setPret(pret);
         prolongement.setDateDebut(dateDebutProlongement);
-        prolongement.setDateRetourPrevue(nouvelleDateRetour);
+        // AVANT
+        // prolongement.setDateRetourPrevue(nouvelleDateRetour);
+        // APRES
+        prolongement.setDateRetourPrevue(retourAjuste);
+
         prolongement.setEtatTraitement(Prolongement.EtatTraitement.EN_ATTENTE);
         
         prolongementRepository.save(prolongement);
@@ -287,7 +289,7 @@ public class PretService {
         // Déterminer le statut final
         if (dateRetourEffective.isAfter(pret.getDateRetourPrevue())) {
             pret.setStatutPret(Pret.StatutPret.RETARD);
-            creerPenalisation(pret);
+            creerPenalisation(pret, dateRetourEffective);
         } else {
             pret.setStatutPret(Pret.StatutPret.RETOURNE);
         }
@@ -299,13 +301,15 @@ public class PretService {
         pretRepository.save(pret);
     }
 
-    private void creerPenalisation(Pret pret) {
+    private void creerPenalisation(Pret pret, LocalDate dateRetourEffective) {
         Profil profil = pret.getAdherent().getProfil();
-        LocalDate dateFinPenalisation = LocalDate.now().plusDays(profil.getNbrJourPenalite());
+        LocalDate dateFinPenalisation = dateRetourEffective.plusDays(profil.getNbrJourPenalite());
+        // LocalDate dateFinPenalisation = LocalDate.now().plusDays(profil.getNbrJourPenalite());
         
         Penalisation penalisation = new Penalisation(
             pret.getAdherent(),
-            LocalDate.now(),
+            dateRetourEffective,
+            // LocalDate.now(),
             dateFinPenalisation,
             Penalisation.Etat.EN_COURS
         );
