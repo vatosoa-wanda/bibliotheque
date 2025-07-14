@@ -242,15 +242,10 @@ public class PretService {
             throw new RuntimeException("Prolonger un pret un seule fois");
         }
 
-        // 5. Calculer les nouvelles dates
-        LocalDate dateDebutProlongement = LocalDate.now();
-        // Avant
-        // LocalDate nouvelleDateRetour = dateDebutProlongement.plusDays(
-                // adherent.getProfil().getNbrJourPretPenalite());
-        // Apres
+        // 5. Calculer les nouvelles dates à partir de la date retour prévue du prêt
+        LocalDate dateDebutProlongement = pret.getDateRetourPrevue();
         LocalDate retourInitial = dateDebutProlongement.plusDays(adherent.getProfil().getNbrJourPretPenalite());
         LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
-
 
         // 7. Créer et enregistrer le prolongement
         Prolongement prolongement = new Prolongement();

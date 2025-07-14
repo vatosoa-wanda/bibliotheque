@@ -33,16 +33,23 @@ public class JourFerieService {
     /**
      * Vérifie si une date est un jour férié enregistré en base.
      */
+
     public boolean estJourFerie(LocalDate date) {
-        return jourFerieRepository.existsByDate(date);
+        boolean existe = jourFerieRepository.existeDate(java.sql.Date.valueOf(date));
+        System.out.println("estJourFerie(" + date + ") => " + existe);
+        return existe;
     }
 
+    /**
+     * Indique si une date est ouvrable (ni weekend ni jour férié).
+     */
     public boolean isOuvrable(LocalDate date) {
-        DayOfWeek dow = date.getDayOfWeek();
-        if (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY) return false;
-        return !jourFerieRepository.existsByDate(date);
+        return !estNonOuvrable(date);
     }
 
+    /**
+     * Retourne le prochain jour ouvrable si la date fournie ne l’est pas.
+     */
     public LocalDate ajusterSiNonOuvrable(LocalDate date) {
         LocalDate d = date;
         while (!isOuvrable(d)) {
@@ -52,21 +59,10 @@ public class JourFerieService {
     }
 
     /**
-     * Trouve le prochain jour ouvrable après une date donnée.
-     */
-    // public LocalDate ajusterSiNonOuvrable(LocalDate date) {
-    //     LocalDate candidate = date;
-    //     while (estNonOuvrable(candidate)) {
-    //         candidate = candidate.plusDays(1);
-    //     }
-    //     return candidate;
-    // }
-
-    /**
      * Enregistre un nouveau jour férié si la date n’existe pas déjà.
      */
     public JourFerie ajouterJourFerie(LocalDate date, String description) {
-        if (!jourFerieRepository.existsByDate(date)) {
+        if (!estJourFerie(date)) {
             JourFerie jf = new JourFerie();
             jf.setDate(date);
             jf.setDescription(description);

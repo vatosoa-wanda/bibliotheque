@@ -26,14 +26,6 @@ CREATE TABLE Exemplaire (
     disponible BOOLEAN DEFAULT TRUE
 );
 
--- Table Profil
--- CREATE TABLE Profil (
---     id_profil SERIAL PRIMARY KEY,
---     profil VARCHAR(50) NOT NULL,
---     quota INTEGER NOT NULL,
---     nbr_jour_pret_penalite INTEGER NOT NULL
--- );
-
 CREATE TABLE Profil (
     id_profil SERIAL PRIMARY KEY,
     profil VARCHAR(50) NOT NULL,
@@ -42,8 +34,6 @@ CREATE TABLE Profil (
     quota_reservation INTEGER NOT NULL DEFAULT 3,
     quota_prolongement INTEGER NOT NULL DEFAULT 2
 );
-
-
 
 CREATE TABLE Adherent (
     id_adherent SERIAL PRIMARY KEY,
@@ -75,9 +65,9 @@ CREATE TABLE Abonnement (
     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
     date_debut DATE NOT NULL,
     date_fin DATE NOT NULL,
-    actif BOOLEAN
+    actif BOOLEAN NOT NULL DEFAULT true
 );
--- ALTER TABLE abonnement ADD COLUMN actif BOOLEAN;
+UPDATE abonnement SET actif = (date_fin >= CURRENT_DATE);
 
 -- Table Reservation
 CREATE TABLE Reservation (
@@ -88,29 +78,6 @@ CREATE TABLE Reservation (
     id_exemplaire INTEGER NOT NULL REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
     etat VARCHAR(20) CHECK (etat IN ('EN_COURS', 'VALIDE', 'ANNULE')) DEFAULT 'EN_COURS'
 );
-
--- CREATE TABLE Reservation (
---     id_reservation SERIAL PRIMARY KEY,
---     date_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
---     id_exemplaire INTEGER NOT NULL REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
---     etat VARCHAR(20) CHECK (etat IN ('EN_COURS', 'VALIDE', 'ANNULE')) DEFAULT 'EN_COURS'
--- );
-
-
-
--- Table Pret
--- CREATE TABLE Pret (
---     id_pret SERIAL PRIMARY KEY,
---     id_adherent INTEGER NOT NULL REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
---     id_exemplaire INTEGER NOT NULL REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
---     date_debut TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     date_retour_prevue DATE NOT NULL,
---     date_retour_effective DATE,
---     type_pret VARCHAR(20) CHECK (type_pret IN ('sur_place', 'emporte')),
---     statut_pret VARCHAR(20) CHECK (statut_pret IN ('en_demande', 'en_cours', 'retourne', 'retard')) DEFAULT 'en_demande',
---     etat_traitement VARCHAR(20) CHECK (etat_traitement IN ('en_attente', 'valide', 'rejete', 'annule')) DEFAULT 'en_attente'
--- );
 
 -- Table Pret (corrigée pour Enum Java)
 CREATE TABLE Pret (
@@ -159,9 +126,3 @@ CREATE INDEX idx_pret_exemplaire ON Pret(id_exemplaire);
 CREATE INDEX idx_reservation_adherent ON Reservation(id_adherent);
 CREATE INDEX idx_reservation_exemplaire ON Reservation(id_exemplaire);
 
-
-ALTER TABLE abonnement DROP COLUMN IF EXISTS actif;
-
-ALTER TABLE abonnement ADD COLUMN actif BOOLEAN NOT NULL DEFAULT true;
-
-UPDATE abonnement SET actif = (date_fin >= CURRENT_DATE);
