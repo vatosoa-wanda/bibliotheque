@@ -95,13 +95,13 @@ public class ReservationService {
             throw new RuntimeException("Vous avez une sanction en cours.");
         }
 
-// // 4. Vérifier le quota de réservation (et non de prêt ici)
-// long nbReservationsEnCours = reservationRepository.countByAdherentIdAndEtat(adherent.getId(), Reservation.EtatReservation.EN_COURS);
-// if (nbReservationsEnCours >= adherent.getProfil().getQuotaReservation()) {
-//     throw new RuntimeException("Quota de réservation atteint (" + adherent.getProfil().getQuotaReservation() + " maximum).");
-// }
+        // // 4. Vérifier le quota de réservation (et non de prêt ici)
+        // long nbReservationsEnCours = reservationRepository.countByAdherentIdAndEtat(adherent.getId(), Reservation.EtatReservation.EN_COURS);
+        // if (nbReservationsEnCours >= adherent.getProfil().getQuotaReservation()) {
+        //     throw new RuntimeException("Quota de réservation atteint (" + adherent.getProfil().getQuotaReservation() + " maximum).");
+        // }
 
-// 4. Vérifier le quota de réservation VALIDE uniquement
+        // 4. Vérifier le quota de réservation VALIDE uniquement
         long nbReservationsValides = reservationRepository.countByAdherentIdAndEtat(
             adherent.getId(), 
             Reservation.EtatReservation.VALIDE
@@ -114,19 +114,19 @@ public class ReservationService {
             );
         }
 
-// 4. Vérifier le quota de réservations actives (EN_COURS + VALIDE)
-// long nbReservationsActives = reservationRepository.countByAdherentIdAndEtatIn(
-//     adherent.getId(),
-//     List.of(Reservation.EtatReservation.EN_COURS, Reservation.EtatReservation.VALIDE)
-// );
+        // 4. Vérifier le quota de réservations actives (EN_COURS + VALIDE)
+        // long nbReservationsActives = reservationRepository.countByAdherentIdAndEtatIn(
+        //     adherent.getId(),
+        //     List.of(Reservation.EtatReservation.EN_COURS, Reservation.EtatReservation.VALIDE)
+        // );
 
-// if (nbReservationsActives >= adherent.getProfil().getQuotaReservation()) {
-//     throw new RuntimeException(
-//         "Quota de réservation atteint (" 
-//         + adherent.getProfil().getQuotaReservation() 
-//         + " réservations actives maximum)."
-//     );
-// }
+        // if (nbReservationsActives >= adherent.getProfil().getQuotaReservation()) {
+        //     throw new RuntimeException(
+        //         "Quota de réservation atteint (" 
+        //         + adherent.getProfil().getQuotaReservation() 
+        //         + " réservations actives maximum)."
+        //     );
+        // }
 
         // 5. Vérifier si le livre est restreint aux mineurs
         if (livre.isRestreint() && adherent.getAge() < 18) {

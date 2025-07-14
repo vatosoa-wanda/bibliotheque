@@ -3,6 +3,7 @@ F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\controller\PretC
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\UserService.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\controller\ReservationController.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\AdherentService.java
+F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\model\JourFerie.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\repository\PenalisationRepository.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\repository\AbonnementRepository.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\CombinedUserDetailsService.java
@@ -15,6 +16,7 @@ F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\model\Exemplaire
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\controller\ProlongementController.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\SecurityConfig.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\model\Prolongement.java
+F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\JourFerieService.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\model\Penalisation.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\CustomAuthenticationSuccessHandler.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\model\Abonnement.java
@@ -24,6 +26,7 @@ F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\Abonneme
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\PenalisationService.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\ExemplaireService.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\ProlongementService.java
+F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\repository\JourFerieRepository.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\controller\LoginController.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\PretService.java
 F:\ITU\S4\MrNaina\bibliotheque\src\main\java\com\example\biblio\service\ReservationService.java
