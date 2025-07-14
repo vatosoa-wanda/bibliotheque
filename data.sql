@@ -32,11 +32,12 @@ INSERT INTO Abonnement (id_adherent, date_debut, date_fin)
 VALUES
 (1, '2025-01-01', '2025-12-31'),
 (2, '2025-01-01', '2025-12-31'),
-(3, '2025-01-01', '2025-03-31'); -- cet abonnement est expiré si on teste après mars
+(3, '2025-01-01', '2025-03-31'); -- paul non abonne a partir de avril
 
 -- Mise à jour du champ actif selon la date actuelle
 UPDATE Abonnement SET actif = (date_fin >= CURRENT_DATE);
 
+-- test pret a prolonger pour adapter la date de retour car ferie
 INSERT INTO Pret (
     id_adherent,
     id_exemplaire,
@@ -54,3 +55,6 @@ INSERT INTO Pret (
     'EN_COURS',
     'VALIDE'
 );
+
+INSERT INTO Penalisation (id_adherent, date_debut, date_fin, etat)
+VALUES (2, '2025-07-10', '2023-07-18', 'EN_COURS');
