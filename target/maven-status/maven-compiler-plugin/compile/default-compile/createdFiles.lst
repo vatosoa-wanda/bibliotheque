@@ -4,10 +4,13 @@ com\example\biblio\model\Pret.class
 com\example\biblio\controller\LivreController.class
 com\example\biblio\model\Pret$EtatTraitement.class
 com\example\biblio\controller\ProlongementController.class
+com\example\biblio\service\JourFerieService.class
 com\example\biblio\model\Profil.class
 com\example\biblio\model\Abonnement.class
 com\example\biblio\service\CombinedUserDetailsService.class
+com\example\biblio\repository\JourFerieRepository.class
 com\example\biblio\model\Penalisation$Etat.class
+com\example\biblio\model\JourFerie.class
 com\example\biblio\model\Pret$StatutPret.class
 com\example\biblio\model\Adherent.class
 com\example\biblio\service\UserService.class
