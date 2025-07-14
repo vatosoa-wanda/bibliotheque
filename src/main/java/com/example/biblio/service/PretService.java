@@ -179,8 +179,8 @@ public class PretService {
         pret.setDateRetourPrevue(retourAjuste);
 
         pret.setTypePret(Pret.TypePret.EMPORTE);
-        pret.setStatutPret(Pret.StatutPret.EN_DEMANDE);
-        pret.setEtatTraitement(Pret.EtatTraitement.EN_ATTENTE);
+        pret.setStatutPret(Pret.StatutPret.EN_COURS);
+        pret.setEtatTraitement(Pret.EtatTraitement.VALIDE);
 
         // Marquer l'exemplaire comme indisponible
         exemplaire.setDisponible(false);

@@ -17,8 +17,8 @@ VALUES
 
 -- Insertion de livres
 INSERT INTO Livre (nom_livre, auteur, restreint) VALUES
-('Introduction à Java', 'John Doe', false),
-('Spring Boot Avancé', 'Jane Smith', false),
+('Introduction a Java', 'John Doe', false),
+('Spring Boot Avance', 'Jane Smith', false),
 ('Psychologie Interdite', 'Sigmund Freud', true);
 
 -- Insertion d'exemplaires
