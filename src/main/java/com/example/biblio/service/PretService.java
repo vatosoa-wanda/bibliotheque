@@ -372,7 +372,6 @@ public class PretService {
         pret.setDateDebut(datePret);
 
         // Calcul de la date de retour prévue à partir de la date choisie
-        // LocalDate retourInitial = datePret.plusDays(adherent.getProfil().getNbrJourPretPenalite());
         LocalDate retourInitial = datePret.toLocalDate().plusDays(adherent.getProfil().getNbrJourPretPenalite());
         LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
         pret.setDateRetourPrevue(retourAjuste);
