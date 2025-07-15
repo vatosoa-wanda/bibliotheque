@@ -1,4 +1,4 @@
-\c postgres
+-- \c postgres
 DROP DATABASE IF EXISTS biblio;
 CREATE DATABASE biblio;
 
