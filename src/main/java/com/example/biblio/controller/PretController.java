@@ -3,13 +3,14 @@ package com.example.biblio.controller;
 import com.example.biblio.model.*;
 import com.example.biblio.service.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -138,6 +139,32 @@ public class PretController {
         
         return "redirect:/mes-prets";
     }
+
+    @GetMapping("/preter")
+    public String showPretFormAdmin(Model model) {
+        model.addAttribute("livre", new Livre());
+        model.addAttribute("pret", new Pret());
+        model.addAttribute("statuts", Pret.StatutPret.values());
+        return "/admin/pret";
+    }
+
+    @PostMapping("/preter")
+    public String creerPret(@RequestParam String adherentNom,
+                            @RequestParam String livreTitre,
+                            @RequestParam(required = false) String livreAuteur,
+                            @RequestParam String typePret,
+                            @RequestParam String datePret,
+                            RedirectAttributes redirectAttributes) {
+        try {
+            LocalDateTime date_a_preter = LocalDateTime.parse(datePret);
+            Pret pret = pretService.demanderPretAdmin(adherentNom, livreTitre, livreAuteur, typePret, date_a_preter);
+            redirectAttributes.addFlashAttribute("message", "✅ Prêt créé avec succès pour " + adherentNom);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Erreur : " + e.getMessage());
+        }
+        return "redirect:/preter";
+    }
+
 
 
 }

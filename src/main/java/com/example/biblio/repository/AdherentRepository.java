@@ -8,4 +8,7 @@ public interface AdherentRepository extends JpaRepository<Adherent, Long> {
 
     Optional<Adherent> findByEmail(String email);
     Adherent findAdByEmail(String email);
+
+    Optional<Adherent> findByNom(String nom);
+
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Création d'un prêt</title>
+</head>
+<body>
+    <h2>Créer un prêt</h2>
+
+    <div th:if="${message}" style="color: green;">
+        <p th:text="${message}"></p>
+    </div>
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form action="#" th:action="@{/preter}" method="post">
+        <label for="adherentNom">Nom de l'adhérent :</label>
+        <input type="text" name="adherentNom" id="adherentNom" required><br><br>
+
+        <label for="livreTitre">Titre du livre :</label>
+        <input type="text" name="livreTitre" id="livreTitre" required><br><br>
+
+        <label for="livreAuteur">Auteur du livre (optionnel) :</label>
+        <input type="text" name="livreAuteur" id="livreAuteur"><br><br>
+
+        <label for="typePret">Type de prêt :</label>
+        <select name="typePret" id="typePret" required>
+            <option value="EMPORTE">À emporter</option>
+            <option value="SUR_PLACE">Sur place</option>
+        </select><br><br>
+
+        <!-- <label for="datePret">Date de début du prêt :</label>
+        <input type="date" id="datePret" name="datePret" th:value="${#dates.format(@java.time.LocalDate@now(), 'yyyy-MM-dd')}" required><br><br> -->
+        <label for="datePret">Date de début du prêt :</label>
+        <input type="datetime-local" id="datePret" name="datePret" required />
+
+       
+        <button type="submit">Créer le prêt</button>
+    </form>
+</body>
+</html>
