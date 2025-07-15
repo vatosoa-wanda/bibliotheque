@@ -58,3 +58,5 @@ INSERT INTO Pret (
 
 INSERT INTO Penalisation (id_adherent, date_debut, date_fin, etat)
 VALUES (2, '2025-07-10', '2023-07-18', 'EN_COURS');
+
+UPDATE exemplaire SET disponible = TRUE;

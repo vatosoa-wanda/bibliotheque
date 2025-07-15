@@ -232,6 +232,12 @@ public class PretService {
                 adherent.getProfil().getQuotaProlongement() + " maximum)");
         }
 
+        // 5. Vérifier le quota de prêts en cours
+        long nbPretsEnCours = pretRepository.countByAdherentIdAndStatutPret(adherent.getId(), Pret.StatutPret.EN_COURS);
+        if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
+            throw new RuntimeException("Quota de prêt atteint");
+        }
+
         // 4. Vérifier le quota de prolongement
         int nbProlongements = pret.getProlongements().stream()
                 .filter(p -> p.getEtatTraitement() == Prolongement.EtatTraitement.VALIDE)
@@ -251,9 +257,6 @@ public class PretService {
         Prolongement prolongement = new Prolongement();
         prolongement.setPret(pret);
         prolongement.setDateDebut(dateDebutProlongement);
-        // AVANT
-        // prolongement.setDateRetourPrevue(nouvelleDateRetour);
-        // APRES
         prolongement.setDateRetourPrevue(retourAjuste);
 
         prolongement.setEtatTraitement(Prolongement.EtatTraitement.EN_ATTENTE);
@@ -265,6 +268,7 @@ public class PretService {
         // pret.setDateRetourPrevue(nouvelleDateRetour);
         
         return pretRepository.save(pret);
+        
     }
 
 

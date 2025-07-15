@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
-
+import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Repository
 public interface PretRepository extends JpaRepository<Pret, Long> {
@@ -38,4 +39,17 @@ public interface PretRepository extends JpaRepository<Pret, Long> {
     int countPretsEnCoursByAdherent(Long adherentId);
 
     long countByAdherentIdAndStatutPret(Long adherentId, Pret.StatutPret statut);
+
+    @Query("""
+        SELECT COUNT(p) FROM Pret p
+        WHERE p.exemplaire.id = :idExemplaire
+        AND p.statutPret IN (:statuts)
+        AND (:dateAReserver BETWEEN p.dateDebut AND p.dateRetourPrevue)
+    """)
+    long countActivePretsForExemplaireAtDate(
+        @Param("idExemplaire") Long idExemplaire,
+        @Param("dateAReserver") LocalDateTime dateAReserver,
+        @Param("statuts") List<Pret.StatutPret> statuts
+    );
+
 }

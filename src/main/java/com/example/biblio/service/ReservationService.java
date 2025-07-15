@@ -4,6 +4,7 @@ import com.example.biblio.model.Reservation;
 import com.example.biblio.model.Adherent;
 import com.example.biblio.model.Exemplaire;
 import com.example.biblio.model.Livre;
+import com.example.biblio.model.Pret;
 import com.example.biblio.model.Penalisation;
 import com.example.biblio.repository.*;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,13 @@ public class ReservationService {
     @Autowired
     private PenalisationRepository penalisationRepository;
     private final AbonnementRepository abonnementRepository;
+    private final PretRepository pretRepository;
 
 
-    public ReservationService(ReservationRepository reservationRepository, AbonnementRepository abonnementRepository ) {
+    public ReservationService(ReservationRepository reservationRepository, AbonnementRepository abonnementRepository, PretRepository pretRepository ) {
         this.reservationRepository = reservationRepository;
         this.abonnementRepository = abonnementRepository;
+        this.pretRepository = pretRepository;
     }
 
     // Créer une nouvelle réservation
@@ -88,6 +91,17 @@ public class ReservationService {
         // 2. Vérifier que le livre associé existe
         if (livre == null) {
             throw new RuntimeException("Livre associé introuvable.");
+        }
+
+        // 6. Vérifier que l'exemplaire est disponible à la date demandée
+        long nbPretsConflit = pretRepository.countActivePretsForExemplaireAtDate(
+            exemplaire.getId(),
+            dateAReserver,
+            List.of(Pret.StatutPret.EN_COURS, Pret.StatutPret.RETARD)
+        );
+
+        if (nbPretsConflit > 0) {
+            throw new RuntimeException("Cet exemplaire est déjà emprunté à la date demandée.");
         }
 
         // 3. Vérifier que l'adhérent n'a pas de sanction en cours

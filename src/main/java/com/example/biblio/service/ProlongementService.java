@@ -1,7 +1,11 @@
 package com.example.biblio.service;
 
 import com.example.biblio.model.Prolongement;
+import com.example.biblio.model.Pret;
+import com.example.biblio.model.Adherent;
+import com.example.biblio.model.Exemplaire;
 import com.example.biblio.repository.ProlongementRepository;
+import com.example.biblio.repository.PretRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +16,11 @@ import java.util.List;
 public class ProlongementService {
 
     private final ProlongementRepository prolongementRepository;
+    private final PretRepository pretRepository;
 
-    public ProlongementService(ProlongementRepository prolongementRepository) {
+    public ProlongementService(ProlongementRepository prolongementRepository, PretRepository pretRepository) {
         this.prolongementRepository = prolongementRepository;
+        this.pretRepository = pretRepository;
     }
 
     // Créer une demande de prolongement
@@ -23,13 +29,48 @@ public class ProlongementService {
         return prolongementRepository.save(prolongement);
     }
 
-    // Valider un prolongement
+    // // Valider un prolongement
+    // @Transactional
+    // public Prolongement validerProlongement(Long id) {
+    //     Prolongement prolongement = getProlongementById(id);
+    //     prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
+    //     return prolongementRepository.save(prolongement);
+    // }
     @Transactional
     public Prolongement validerProlongement(Long id) {
         Prolongement prolongement = getProlongementById(id);
         prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
+
+        // Récupérer le prêt original
+        Pret ancienPret = prolongement.getPret();
+        Adherent adherent = ancienPret.getAdherent();
+        Exemplaire exemplaire = ancienPret.getExemplaire();
+
+        // Vérifier quota de prêt en cours
+        long nbPretsEnCours = ancienPret.getAdherent().getPrets().stream()
+                .filter(p -> p.getStatutPret() == Pret.StatutPret.EN_COURS)
+                .count();
+        if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
+            throw new RuntimeException("Quota de prêt atteint (" + adherent.getProfil().getQuota() + ")");
+        }
+
+        // Créer un nouveau prêt lié à ce prolongement
+        Pret nouveauPret = new Pret();
+        nouveauPret.setAdherent(adherent);
+        nouveauPret.setExemplaire(exemplaire);
+        nouveauPret.setDateDebut(prolongement.getDateDebut().atStartOfDay()); // ou .now() si souhaité
+        nouveauPret.setDateRetourPrevue(prolongement.getDateRetourPrevue());
+        nouveauPret.setTypePret(ancienPret.getTypePret());
+        nouveauPret.setStatutPret(Pret.StatutPret.EN_COURS);
+        nouveauPret.setEtatTraitement(Pret.EtatTraitement.VALIDE);
+
+        // Sauvegarder le prêt
+        pretRepository.save(nouveauPret);
+
+        // Sauvegarder le prolongement validé
         return prolongementRepository.save(prolongement);
     }
+
 
     // Rejeter un prolongement
     @Transactional

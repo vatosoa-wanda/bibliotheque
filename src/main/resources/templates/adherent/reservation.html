@@ -20,8 +20,14 @@
         <br><br>
         <button type="submit">Valider la réservation</button>
     </form>
-    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <!-- <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div> -->
+    <div th:if="${success}" style="color: green;">
+        <p th:text="${success}"></p>
+    </div>
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
     <a th:href="@{/listeLivres}">Retour à la liste</a>
 </body>
 

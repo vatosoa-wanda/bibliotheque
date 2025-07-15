@@ -2,6 +2,7 @@ package com.example.biblio.controller;
 
 import com.example.biblio.model.Prolongement;
 import com.example.biblio.model.Pret;
+import com.example.biblio.service.ProlongementService;
 import com.example.biblio.repository.ProlongementRepository;
 import com.example.biblio.repository.PretRepository;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProlongementController {
 
     private final ProlongementRepository prolongementRepository;
+    private final ProlongementService prolongementService;
 
-    public ProlongementController(ProlongementRepository prolongementRepository) {
+    public ProlongementController(ProlongementRepository prolongementRepository, ProlongementService prolongementService) {
         this.prolongementRepository = prolongementRepository;
+        this.prolongementService = prolongementService;
     }
+
 
     @GetMapping("/prolongement_en_cours")
     public String listProlongementsEnAttente(Model model) {
@@ -28,28 +32,40 @@ public class ProlongementController {
         return "admin/prolongements";
     }
 
+    // @PostMapping("/valider-prolongement/{id}")
+    // public String validerProlongement(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    //     try {
+    //         Prolongement prolongement = prolongementRepository.findById(id)
+    //             .orElseThrow(() -> new RuntimeException("Prolongement introuvable"));
+            
+    //         // Mettre à jour le prêt associé
+    //         Pret pret = prolongement.getPret();
+    //         // pret.setDateRetourPrevue(prolongement.getDateRetourPrevue());
+            
+    //         // Mettre à jour le statut du prolongement
+    //         prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
+            
+    //         // pretRepository.save(pret);
+    //         prolongementRepository.save(prolongement);
+            
+    //         redirectAttributes.addFlashAttribute("success", "Prolongement validé avec succès");
+    //     } catch (Exception e) {
+    //         redirectAttributes.addFlashAttribute("error", "Erreur lors de la validation: " + e.getMessage());
+    //     }
+    //     return "redirect:/prolongement_en_cours";
+    // }
+
     @PostMapping("/valider-prolongement/{id}")
     public String validerProlongement(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            Prolongement prolongement = prolongementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Prolongement introuvable"));
-            
-            // Mettre à jour le prêt associé
-            Pret pret = prolongement.getPret();
-            // pret.setDateRetourPrevue(prolongement.getDateRetourPrevue());
-            
-            // Mettre à jour le statut du prolongement
-            prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
-            
-            // pretRepository.save(pret);
-            prolongementRepository.save(prolongement);
-            
+            prolongementService.validerProlongement(id);
             redirectAttributes.addFlashAttribute("success", "Prolongement validé avec succès");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erreur lors de la validation: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Erreur lors de la validation : " + e.getMessage());
         }
         return "redirect:/prolongement_en_cours";
     }
+
 
     @PostMapping("/rejeter-prolongement/{id}")
     public String rejeterProlongement(@PathVariable Long id, RedirectAttributes redirectAttributes) {
