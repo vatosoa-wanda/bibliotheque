@@ -315,6 +315,84 @@ public class PretService {
     public Optional<Pret> findById(Long id) {
         return pretRepository.findById(id);
     }
+
+
+    @Transactional
+    public Pret demanderPretAdmin(String adherentNom, String livreTitre, String livreAuteur, String typePret, LocalDateTime datePret) {
+        // 1. Recherche de l'adhérent
+        Adherent adherent = adherentRepository.findByNom(adherentNom)
+            .orElseThrow(() -> new RuntimeException("Adhérent non trouvé avec le nom : " + adherentNom));
+
+        // 2. Recherche du livre
+        Livre livre;
+        boolean hasTitre = livreTitre != null && !livreTitre.isBlank();
+        boolean hasAuteur = livreAuteur != null && !livreAuteur.isBlank();
+
+        if (hasTitre && hasAuteur) {
+            livre = livreRepository.findByTitreAndAuteur(livreTitre, livreAuteur)
+                .orElseThrow(() -> new RuntimeException("Livre non trouvé avec ce titre et cet auteur"));
+        } else if (hasTitre) {
+            livre = livreRepository.findByTitre(livreTitre)
+                .orElseThrow(() -> new RuntimeException("Livre non trouvé avec ce titre"));
+        } else {
+            throw new RuntimeException("Titre du livre requis");
+        }
+
+        // 3. Exemplaire disponible
+        Exemplaire exemplaire = exemplaireRepository.findFirstByLivreIdAndDisponibleTrue(livre.getId())
+            .orElseThrow(() -> new RuntimeException("Aucun exemplaire disponible pour ce livre"));
+
+        // 4. Vérifier sanctions
+        if (penalisationRepository.existsByAdherentIdAndEtat(adherent.getId(), Penalisation.Etat.EN_COURS)) {
+            throw new RuntimeException("L'adhérent a une sanction en cours");
+        }
+
+        // 5. Vérifier quota
+        long nbPretsEnCours = pretRepository.countByAdherentIdAndStatutPret(adherent.getId(), Pret.StatutPret.EN_COURS);
+        if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
+            throw new RuntimeException("Quota d'emprunt atteint (" + adherent.getProfil().getQuota() + " maximum)");
+        }
+
+        // 6. Livre restreint ?
+        if (livre.isRestreint() && adherent.getAge() < 18) {
+            throw new RuntimeException("Livre réservé aux majeurs");
+        }
+
+        // 7. Abonnement valide ?
+        if (!abonnementRepository.existsByAdherentIdAndDateFinAfter(adherent.getId(), LocalDate.now())) {
+            throw new RuntimeException("Adhérent sans abonnement valide");
+        }
+
+        // 8. Création du prêt
+        Pret pret = new Pret();
+        pret.setAdherent(adherent);
+        pret.setExemplaire(exemplaire);
+
+        // Date de début : celle saisie dans le formulaire
+        pret.setDateDebut(datePret);
+
+        // Calcul de la date de retour prévue à partir de la date choisie
+        LocalDate retourInitial = datePret.toLocalDate().plusDays(adherent.getProfil().getNbrJourPretPenalite());
+        LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
+        pret.setDateRetourPrevue(retourAjuste);
+
+        // Type de prêt (via enum)
+        Pret.TypePret typeEnum = Pret.TypePret.valueOf(typePret.toUpperCase());
+        pret.setTypePret(typeEnum);
+
+        // États initiaux
+        pret.setStatutPret(Pret.StatutPret.EN_COURS);
+        pret.setEtatTraitement(Pret.EtatTraitement.VALIDE);
+
+        // Marquer l'exemplaire comme non disponible
+        exemplaire.setDisponible(false);
+        exemplaireRepository.save(exemplaire);
+
+        // Enregistrement
+        return pretRepository.save(pret);
+    }
+
+
 }
 
 
