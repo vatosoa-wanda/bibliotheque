@@ -9,8 +9,11 @@
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/controller/ProlongementController.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/repository/LivreRepository.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/service/ExemplaireService.java
+/home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/model/ExemplaireDTO.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/model/Penalisation.java
+/home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/model/LivreDTO.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/repository/ReservationRepository.java
+/home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/controller/LivreRestController.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/controller/ReservationController.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/service/JourFerieService.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/repository/UserRepository.java
