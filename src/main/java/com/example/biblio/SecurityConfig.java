@@ -28,6 +28,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/css/**").permitAll()
+                .requestMatchers("/api/livres/**").permitAll() 
                 .requestMatchers("/admin/**").hasRole("USER")
                 .requestMatchers("/adherent/**").hasRole("ADHERENT")
                 .anyRequest().authenticated()
