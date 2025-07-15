@@ -1,8 +1,9 @@
 package com.example.biblio.controller;
 
-import com.example.biblio.model.AdherentDetailsDTO;
 import com.example.biblio.model.*;
 import com.example.biblio.repository.AdherentRepository;
+import com.example.biblio.repository.PretRepository;
+import com.example.biblio.repository.ReservationRepository;
 import com.example.biblio.repository.AbonnementRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +17,19 @@ public class AdherentRestController {
 
     private final AdherentRepository adherentRepository;
     private final AbonnementRepository abonnementRepository;
+    private final PretRepository pretRepository;
+    private final ReservationRepository reservationRepository;
 
-    public AdherentRestController(AdherentRepository adherentRepository, AbonnementRepository abonnementRepository) {
+    public AdherentRestController(
+            AdherentRepository adherentRepository,
+            AbonnementRepository abonnementRepository,
+            PretRepository pretRepository,
+            ReservationRepository reservationRepository
+    ) {
         this.adherentRepository = adherentRepository;
         this.abonnementRepository = abonnementRepository;
+        this.pretRepository = pretRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping("/{id}")
@@ -47,9 +57,23 @@ public class AdherentRestController {
         });
 
         // Calcul quota restant (simplement basé sur le profil)
-        dto.quotaPretRestant = adherent.getProfil().getQuota() - adherent.getPrets().size();
-        dto.quotaReservationRestant = adherent.getProfil().getQuotaReservation() - adherent.getReservations().size();
-        dto.quotaProlongementRestant = adherent.getProfil().getQuotaProlongement(); // à ajuster si suivi ailleurs
+        // dto.quotaPretRestant = adherent.getProfil().getQuota() - adherent.getPrets().size();
+        // dto.quotaReservationRestant = adherent.getProfil().getQuotaReservation() - adherent.getReservations().size();
+        // dto.quotaProlongementRestant = adherent.getProfil().getQuotaProlongement(); // à ajuster si suivi ailleurs
+          // Calcul des quotas restants (en utilisant les statuts)
+        long nbPretsEnCours = pretRepository.countByAdherentIdAndStatutPret(adherent.getId(), Pret.StatutPret.EN_COURS);
+        // long nbReservationsEnCours = reservationRepository.countByAdherentIdAndStatutReservation(adherent.getId(), Reservation.EtatReservation.EN_COURS);
+
+        long nbReservationsValides = reservationRepository.countByAdherentIdAndEtat(
+            adherent.getId(), 
+            Reservation.EtatReservation.VALIDE
+        );
+
+        dto.quotaPretRestant = adherent.getProfil().getQuota() - (int) nbPretsEnCours;
+        dto.quotaReservationRestant = adherent.getProfil().getQuotaReservation() - (int) nbReservationsValides;
+        dto.quotaProlongementRestant = adherent.getProfil().getQuotaProlongement(); // à ajuster si tu suis le nombre de prolongements
+
+
 
         // Penalisations
         dto.penalites = adherent.getPenalisations().stream()
