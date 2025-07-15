@@ -16,6 +16,7 @@
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/controller/LivreRestController.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/controller/ReservationController.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/service/JourFerieService.java
+/home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/controller/AdherentRestController.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/repository/UserRepository.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/service/PenalisationService.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/model/Pret.java
@@ -42,3 +43,4 @@
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/model/JourFerie.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/service/ProlongementService.java
 /home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/FilmCrudApplication.java
+/home/dell/Documents/WANDA/bibliotheque/src/main/java/com/example/biblio/model/AdherentDetailsDTO.java
