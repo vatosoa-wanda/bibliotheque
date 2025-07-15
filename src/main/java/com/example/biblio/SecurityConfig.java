@@ -28,7 +28,8 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/css/**").permitAll()
-                .requestMatchers("/api/livres/**").permitAll() 
+                .requestMatchers("/api/livres/**").permitAll() //autoriser librement les endpoints REST livres
+                .requestMatchers("/api/adherents/**").permitAll() // autoriser librement les endpoints REST adherents
                 .requestMatchers("/admin/**").hasRole("USER")
                 .requestMatchers("/adherent/**").hasRole("ADHERENT")
                 .anyRequest().authenticated()
