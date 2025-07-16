@@ -37,14 +37,14 @@ INSERT INTO JourFerie (date, description) VALUES
   
 INSERT INTO Adherent (nom, prenom, email, mdp, telephone, date_naissance, adresse, id_profil, actif)
 VALUES
-('Amine Bensaid', 'Amine Bensaid', 'ETU001', 'ETU001', '0321123456', '2010-05-15', 'Lot 101 Tana', 1, true),
-('Sarah El Khattabi', 'Sarah El Khattabi', 'ETU002', 'ETU002', '0321987654', '1990-12-01', 'Lot 202 Tana', 1, true),
-('Youssef Moujahid', 'Youssef Moujahid', 'ETU003', 'ETU003', '0331456723', '1985-03-20', 'Lot 303 Tana', 1, true),
-('Nadia Benali', 'Nadia Benali', 'ENS001', 'ENS001', '0331456723', '1985-03-20', 'Lot 303 Tana', 2, true),
-('Karim Haddadi', 'Karim Haddadi', 'ENS002', 'ENS002', '0331456723', '1985-03-20', 'Lot 303 Tana', 2, true),
-('Salima Touhami', 'Salima Touhami', 'ENS003', 'ENS003', '0331456723', '1985-03-20', 'Lot 303 Tana', 2, true),
-('Rachid El Mansouri', 'Rachid El Mansouri', 'PROF001', 'PROF001', '0331456723', '1985-03-20', 'Lot 303 Tana', 3, true),
-('Amina Zerouali', 'Amina Zerouali', 'PROF002', 'PROF002', '0331456723', '1985-03-20', 'Lot 303 Tana', 3, true);
+('Amine', 'Bensaïd', 'ETU001', 'ETU001', '0321123456', '1985-03-20', 'Lot 101 Tana', 1, true),
+('Sarah', 'El Khattabi', 'ETU002', 'ETU002', '0321987654', '1985-03-20', 'Lot 202 Tana', 1, true),
+('Youssef', 'Moujahid', 'ETU003', 'ETU003', '0331456723', '1985-03-20', 'Lot 303 Tana', 1, true),
+('Nadia', 'Benali', 'ENS001', 'ENS001', '0331456723', '1985-03-20', 'Lot 303 Tana', 2, true),
+('Karim', 'Haddadi', 'ENS002', 'ENS002', '0331456723', '1985-03-20', 'Lot 303 Tana', 2, true),
+('Salima', 'Touhami', 'ENS003', 'ENS003', '0331456723', '1985-03-20', 'Lot 303 Tana', 2, true),
+('Rachid', 'El Mansouri', 'PROF001', 'PROF001', '0331456723', '1985-03-20', 'Lot 303 Tana', 3, true),
+('Amina', 'Zerouali', 'PROF002', 'PROF002', '0331456723', '1985-03-20', 'Lot 303 Tana', 3, true);
 
 INSERT INTO Abonnement (id_adherent, date_debut, date_fin, actif)
 VALUES

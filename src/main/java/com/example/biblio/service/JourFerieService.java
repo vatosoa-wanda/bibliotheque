@@ -19,7 +19,8 @@ public class JourFerieService {
      * Vérifie si une date est un jour non ouvrable (samedi, dimanche ou jour férié).
      */
     public boolean estNonOuvrable(LocalDate date) {
-        return estWeekend(date) || estJourFerie(date);
+        return estJourFerie(date);
+        // return estWeekend(date) || estJourFerie(date);
     }
 
     /**
@@ -54,6 +55,7 @@ public class JourFerieService {
         LocalDate d = date;
         while (!isOuvrable(d)) {
             d = d.plusDays(1);
+            // d = d.minusDays(1);
         }
         return d;
     }

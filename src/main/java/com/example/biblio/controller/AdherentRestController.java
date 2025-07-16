@@ -4,6 +4,7 @@ import com.example.biblio.model.*;
 import com.example.biblio.repository.AdherentRepository;
 import com.example.biblio.repository.PretRepository;
 import com.example.biblio.repository.ReservationRepository;
+import com.example.biblio.repository.ProlongementRepository;
 import com.example.biblio.repository.AbonnementRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +20,20 @@ public class AdherentRestController {
     private final AbonnementRepository abonnementRepository;
     private final PretRepository pretRepository;
     private final ReservationRepository reservationRepository;
+    private final ProlongementRepository prolongementRepository;
 
     public AdherentRestController(
             AdherentRepository adherentRepository,
             AbonnementRepository abonnementRepository,
             PretRepository pretRepository,
-            ReservationRepository reservationRepository
+            ReservationRepository reservationRepository,
+            ProlongementRepository prolongementRepository
     ) {
         this.adherentRepository = adherentRepository;
         this.abonnementRepository = abonnementRepository;
         this.pretRepository = pretRepository;
         this.reservationRepository = reservationRepository;
+        this.prolongementRepository = prolongementRepository;
     }
 
     @GetMapping("/{id}")
@@ -69,9 +73,14 @@ public class AdherentRestController {
             Reservation.EtatReservation.VALIDE
         );
 
+        long nbProlongementsValides = prolongementRepository.countByPretAdherentAndEtatTraitement(
+            adherent, 
+            Prolongement.EtatTraitement.VALIDE);
+        
+
         dto.quotaPretRestant = adherent.getProfil().getQuota() - (int) nbPretsEnCours;
         dto.quotaReservationRestant = adherent.getProfil().getQuotaReservation() - (int) nbReservationsValides;
-        dto.quotaProlongementRestant = adherent.getProfil().getQuotaProlongement(); // à ajuster si tu suis le nombre de prolongements
+        dto.quotaProlongementRestant = adherent.getProfil().getQuotaProlongement() - (int) nbProlongementsValides; // à ajuster si tu suis le nombre de prolongements
 
 
 
