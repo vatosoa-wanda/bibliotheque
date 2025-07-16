@@ -78,11 +78,9 @@ public class AdherentRestController {
             Prolongement.EtatTraitement.VALIDE);
         
 
-        dto.quotaPretRestant = adherent.getProfil().getQuota() - (int) nbPretsEnCours;
+        dto.quotaPretRestant = adherent.getProfil().getQuota() - (int) nbPretsEnCours - (int) nbProlongementsValides;
         dto.quotaReservationRestant = adherent.getProfil().getQuotaReservation() - (int) nbReservationsValides;
         dto.quotaProlongementRestant = adherent.getProfil().getQuotaProlongement() - (int) nbProlongementsValides; // à ajuster si tu suis le nombre de prolongements
-
-
 
         // Penalisations
         dto.penalites = adherent.getPenalisations().stream()

@@ -234,7 +234,7 @@ public class PretService {
 
         // 5. Vérifier le quota de prêts en cours
         long nbPretsEnCours = pretRepository.countByAdherentIdAndStatutPret(adherent.getId(), Pret.StatutPret.EN_COURS);
-        if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
+        if ((nbPretsEnCours + nbProlongementsValides) >= adherent.getProfil().getQuota()) {
             throw new RuntimeException("Quota de prêt atteint");
         }
 
@@ -353,7 +353,12 @@ public class PretService {
 
         // 5. Vérifier quota
         long nbPretsEnCours = pretRepository.countByAdherentIdAndStatutPret(adherent.getId(), Pret.StatutPret.EN_COURS);
-        if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
+        long nbProlongementsValides = prolongementRepository.countByPretAdherentAndEtatTraitement(
+                adherent, 
+                Prolongement.EtatTraitement.VALIDE);
+        
+        
+        if ((nbPretsEnCours + nbProlongementsValides) >= adherent.getProfil().getQuota()) {
             throw new RuntimeException("Quota d'emprunt atteint (" + adherent.getProfil().getQuota() + " maximum)");
         }
 

@@ -2,41 +2,81 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Création d'un prêt</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
-<body>
-    <h2>Créer un prêt</h2>
-
-    <div th:if="${message}" style="color: green;">
-        <p th:text="${message}"></p>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h4 mb-0 text-center">Créer un prêt</h2>
+                    </div>
+                    
+                    <div class="card-body">
+                        <!-- Messages d'alerte -->
+                        <div th:if="${message}" class="alert alert-success">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <span th:text="${message}"></span>
+                        </div>
+                        
+                        <div th:if="${error}" class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <span th:text="${error}"></span>
+                        </div>
+                        
+                        <!-- Formulaire -->
+                        <form th:action="@{/preter}" method="post">
+                            <div class="mb-3">
+                                <label for="adherentNom" class="form-label">Nom de l'adhérent :</label>
+                                <input type="text" class="form-control" name="adherentNom" id="adherentNom" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="livreTitre" class="form-label">Titre du livre :</label>
+                                <input type="text" class="form-control" name="livreTitre" id="livreTitre" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="livreAuteur" class="form-label">Auteur du livre (optionnel) :</label>
+                                <input type="text" class="form-control" name="livreAuteur" id="livreAuteur">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="typePret" class="form-label">Type de prêt :</label>
+                                <select class="form-select" name="typePret" id="typePret" required>
+                                    <option value="EMPORTE">À emporter</option>
+                                    <option value="SUR_PLACE">Sur place</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="datePret" class="form-label">Date de début du prêt :</label>
+                                <input type="datetime-local" class="form-control" id="datePret" name="datePret" required>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-2"></i>Créer le prêt
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="mt-3 text-center">
+                            <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Retour à l'accueil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div th:if="${error}" style="color: red;">
-        <p th:text="${error}"></p>
-    </div>
 
-    <form action="#" th:action="@{/preter}" method="post">
-        <label for="adherentNom">Nom de l'adhérent :</label>
-        <input type="text" name="adherentNom" id="adherentNom" required><br><br>
-
-        <label for="livreTitre">Titre du livre :</label>
-        <input type="text" name="livreTitre" id="livreTitre" required><br><br>
-
-        <label for="livreAuteur">Auteur du livre (optionnel) :</label>
-        <input type="text" name="livreAuteur" id="livreAuteur"><br><br>
-
-        <label for="typePret">Type de prêt :</label>
-        <select name="typePret" id="typePret" required>
-            <option value="EMPORTE">À emporter</option>
-            <option value="SUR_PLACE">Sur place</option>
-        </select><br><br>
-
-        <!-- <label for="datePret">Date de début du prêt :</label>
-        <input type="date" id="datePret" name="datePret" th:value="${#dates.format(@java.time.LocalDate@now(), 'yyyy-MM-dd')}" required><br><br> -->
-        <label for="datePret">Date de début du prêt :</label>
-        <input type="datetime-local" id="datePret" name="datePret" required />
-
-       
-        <button type="submit">Créer le prêt</button>
-    </form>
-    <a th:href="@{/admin/dashboard}">Retour à l'accueil</a>
+    <!-- Bootstrap JS (optionnel, pour les fonctionnalités avancées) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
 </body>
 </html>

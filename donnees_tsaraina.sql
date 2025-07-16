@@ -13,6 +13,8 @@ INSERT INTO Exemplaire (id_livre, disponible) VALUES
 (2, true), (2, true),
 (3, true);
 
+INSERT INTO Exemplaire (id_livre, disponible) VALUES
+(1, true), (1, true), (1, true);
 
 -- Insertion profils
 INSERT INTO Profil (profil, quota, nbr_jour_pret,  nbr_jour_pret_penalite, quota_reservation, quota_prolongement) VALUES
@@ -58,4 +60,10 @@ VALUES
 (8, '2024-10-01', '2025-06-01', false);
 
 
+INSERT INTO Abonnement (id_adherent, date_debut, date_fin, actif)
+VALUES
+(1, '2025-07-24', '2025-09-24', true);
 
+update disponible = true where id_livre = 1;
+
+delete from exemplaire where id_exemplaire >

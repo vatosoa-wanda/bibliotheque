@@ -36,40 +36,67 @@ public class ProlongementService {
     //     prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
     //     return prolongementRepository.save(prolongement);
     // }
+
+    // @Transactional
+    // public Prolongement validerProlongement(Long id) {
+    //     Prolongement prolongement = getProlongementById(id);
+    //     prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
+
+    //     // Récupérer le prêt original
+    //     Pret ancienPret = prolongement.getPret();
+    //     Adherent adherent = ancienPret.getAdherent();
+    //     Exemplaire exemplaire = ancienPret.getExemplaire();
+
+    //     // Vérifier quota de prêt en cours
+    //     long nbPretsEnCours = ancienPret.getAdherent().getPrets().stream()
+    //             .filter(p -> p.getStatutPret() == Pret.StatutPret.EN_COURS)
+    //             .count();
+    //     if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
+    //         throw new RuntimeException("Quota de prêt atteint (" + adherent.getProfil().getQuota() + ")");
+    //     }
+
+    //     // Créer un nouveau prêt lié à ce prolongement
+    //     Pret nouveauPret = new Pret();
+    //     nouveauPret.setAdherent(adherent);
+    //     nouveauPret.setExemplaire(exemplaire);
+    //     nouveauPret.setDateDebut(prolongement.getDateDebut().atStartOfDay()); // ou .now() si souhaité
+    //     nouveauPret.setDateRetourPrevue(prolongement.getDateRetourPrevue());
+    //     nouveauPret.setTypePret(ancienPret.getTypePret());
+    //     nouveauPret.setStatutPret(Pret.StatutPret.EN_COURS);
+    //     nouveauPret.setEtatTraitement(Pret.EtatTraitement.VALIDE);
+
+    //     // Sauvegarder le prêt
+    //     pretRepository.save(nouveauPret);
+
+    //     // Sauvegarder le prolongement validé
+    //     return prolongementRepository.save(prolongement);
+    // }
     @Transactional
     public Prolongement validerProlongement(Long id) {
+        // Récupérer le prolongement
         Prolongement prolongement = getProlongementById(id);
         prolongement.setEtatTraitement(Prolongement.EtatTraitement.VALIDE);
 
-        // Récupérer le prêt original
-        Pret ancienPret = prolongement.getPret();
-        Adherent adherent = ancienPret.getAdherent();
-        Exemplaire exemplaire = ancienPret.getExemplaire();
+        // Récupérer le prêt original lié
+        Pret pret = prolongement.getPret();
 
-        // Vérifier quota de prêt en cours
-        long nbPretsEnCours = ancienPret.getAdherent().getPrets().stream()
+        // Vérifier le quota de prêt en cours (facultatif selon logique métier)
+        Adherent adherent = pret.getAdherent();
+        long nbPretsEnCours = adherent.getPrets().stream()
                 .filter(p -> p.getStatutPret() == Pret.StatutPret.EN_COURS)
                 .count();
         if (nbPretsEnCours >= adherent.getProfil().getQuota()) {
             throw new RuntimeException("Quota de prêt atteint (" + adherent.getProfil().getQuota() + ")");
         }
 
-        // Créer un nouveau prêt lié à ce prolongement
-        Pret nouveauPret = new Pret();
-        nouveauPret.setAdherent(adherent);
-        nouveauPret.setExemplaire(exemplaire);
-        nouveauPret.setDateDebut(prolongement.getDateDebut().atStartOfDay()); // ou .now() si souhaité
-        nouveauPret.setDateRetourPrevue(prolongement.getDateRetourPrevue());
-        nouveauPret.setTypePret(ancienPret.getTypePret());
-        nouveauPret.setStatutPret(Pret.StatutPret.EN_COURS);
-        nouveauPret.setEtatTraitement(Pret.EtatTraitement.VALIDE);
+        // Mettre à jour la date de retour prévue du prêt
+        pret.setDateRetourPrevue(prolongement.getDateRetourPrevue());
 
-        // Sauvegarder le prêt
-        pretRepository.save(nouveauPret);
-
-        // Sauvegarder le prolongement validé
+        // Sauvegarder les modifications
+        pretRepository.save(pret);
         return prolongementRepository.save(prolongement);
     }
+
 
 
     // Rejeter un prolongement
