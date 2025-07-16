@@ -174,7 +174,7 @@ public class PretService {
         // pret.setDateRetourPrevue(LocalDate.now().plusDays(adherent.getProfil().getNbrJourPretPenalite()));
         // Apres
         // Gestion date retour prevu si jour ferie
-        LocalDate retourInitial = LocalDate.now().plusDays(adherent.getProfil().getNbrJourPretPenalite());
+        LocalDate retourInitial = LocalDate.now().plusDays(adherent.getProfil().getNbrJourPret());
         LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
         pret.setDateRetourPrevue(retourAjuste);
 
@@ -250,7 +250,7 @@ public class PretService {
 
         // 5. Calculer les nouvelles dates à partir de la date retour prévue du prêt
         LocalDate dateDebutProlongement = pret.getDateRetourPrevue();
-        LocalDate retourInitial = dateDebutProlongement.plusDays(adherent.getProfil().getNbrJourPretPenalite());
+        LocalDate retourInitial = dateDebutProlongement.plusDays(adherent.getProfil().getNbrJourPret());
         LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
 
         // 7. Créer et enregistrer le prolongement
@@ -376,7 +376,7 @@ public class PretService {
         pret.setDateDebut(datePret);
 
         // Calcul de la date de retour prévue à partir de la date choisie
-        LocalDate retourInitial = datePret.toLocalDate().plusDays(adherent.getProfil().getNbrJourPretPenalite());
+        LocalDate retourInitial = datePret.toLocalDate().plusDays(adherent.getProfil().getNbrJourPret());
         LocalDate retourAjuste = jourFerieService.ajusterSiNonOuvrable(retourInitial);
         pret.setDateRetourPrevue(retourAjuste);
 

@@ -7,7 +7,6 @@ import java.util.Set;
 @Entity
 @Table(name = "profil")
 public class Profil {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_profil")
@@ -18,9 +17,6 @@ public class Profil {
 
     @Column(nullable = false)
     private Integer quota;  // quota de prêt
-
-    @Column(name = "nbr_jour_pret", nullable = false)
-    private Integer nbrJourPret; // ✅ nouveau champ
 
     @Column(name = "nbr_jour_pret_penalite", nullable = false)
     private Integer nbrJourPenalite;
@@ -37,17 +33,15 @@ public class Profil {
     // Constructeurs
     public Profil() {}
 
-    public Profil(String profil, Integer quota, Integer nbrJourPret, Integer nbrJourPenalite, Integer quotaReservation, Integer quotaProlongement) {
+    public Profil(String profil, Integer quota, Integer nbrJourPenalite, Integer quotaReservation, Integer quotaProlongement) {
         this.profil = profil;
         this.quota = quota;
-        this.nbrJourPret = nbrJourPret;
         this.nbrJourPenalite = nbrJourPenalite;
         this.quotaReservation = quotaReservation;
         this.quotaProlongement = quotaProlongement;
     }
 
     // Getters & Setters
-
     public Long getId() {
         return id;
     }
@@ -72,15 +66,11 @@ public class Profil {
         this.quota = quota;
     }
 
-    public Integer getNbrJourPret() {
-        return nbrJourPret;
-    }
-
-    public void setNbrJourPret(Integer nbrJourPret) {
-        this.nbrJourPret = nbrJourPret;
-    }
-
     public Integer getNbrJourPenalite() {
+        return nbrJourPenalite;
+    }
+
+    public Integer getNbrJourPretPenalite() {
         return nbrJourPenalite;
     }
 

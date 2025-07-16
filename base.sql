@@ -1,4 +1,4 @@
--- \c postgres
+\c postgres
 DROP DATABASE IF EXISTS biblio;
 CREATE DATABASE biblio;
 
@@ -26,14 +26,25 @@ CREATE TABLE Exemplaire (
     disponible BOOLEAN DEFAULT TRUE
 );
 
+-- CREATE TABLE Profil (
+--     id_profil SERIAL PRIMARY KEY,
+--     profil VARCHAR(50) NOT NULL,
+--     quota INTEGER NOT NULL, -- quota pret
+--     nbr_jour_pret_penalite INTEGER NOT NULL,
+--     quota_reservation INTEGER NOT NULL DEFAULT 3,
+--     quota_prolongement INTEGER NOT NULL DEFAULT 2
+-- );
 CREATE TABLE Profil (
     id_profil SERIAL PRIMARY KEY,
     profil VARCHAR(50) NOT NULL,
-    quota INTEGER NOT NULL, -- quota pret
+    quota INTEGER NOT NULL, -- quota prêt
+    nbr_jour_pret INTEGER NOT NULL, 
     nbr_jour_pret_penalite INTEGER NOT NULL,
     quota_reservation INTEGER NOT NULL DEFAULT 3,
     quota_prolongement INTEGER NOT NULL DEFAULT 2
 );
+
+
 
 CREATE TABLE Adherent (
     id_adherent SERIAL PRIMARY KEY,
